@@ -13,11 +13,14 @@ retrieval:
   rrf_k: 60
   dense_weight: 1.0
   bm25_weight: 0.8
+  # LightRAG-inspired source diversity: avoid letting one long document
+  # monopolize the candidate pool before reranking.
+  max_chunks_per_source: 3
   # Calibrate this on your own in-domain/OOD evaluation set.
   ood_dense_threshold: 0.28
 
 generation:
   provider_order: [gemini, openrouter]
   max_context_chars: 18000
-  # Keep Gemini 3.x model defaults unless an experiment intentionally changes sampling.
+  # Keep Gemini model defaults unless an experiment intentionally changes sampling.
   temperature: null
