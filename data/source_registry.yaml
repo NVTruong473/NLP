@@ -56,11 +56,11 @@ sources:
     evidence_grade: A
     verified_at: '2026-09-08'
 
-  - id: T07-VB2-2026
-    authority: Học viện Kỹ thuật và Công nghệ an ninh - Bộ Công an
-    title: Thông tin tuyển sinh đại học văn bằng 2 chính quy tuyển mới năm 2026
-    url: https://hvktcnan.bocongan.gov.vn/TrangChu/tin-tuc/1966-thong-tin-tuyen-sinh-dai-hoc-van-bang-2-chinh-quy-tuyen-moi-doi-voi-nguoi-da-co-bang-tot-nghiep-trinh-do-dai-hoc-tro-len-nam-2026.html
-    published: '2026-05-05'
+  - id: HVANND-VB2-2026
+    authority: Học viện An ninh nhân dân
+    title: Tuyển sinh tuyển mới đào tạo trình độ đại học năm 2026 tại Học viện An ninh nhân dân
+    url: https://hvannd.edu.vn/en/tuyen-sinh-tuyen-moi-dao-tao-trinh-do-dai-hoc-nam-2026-tai-hoc-vien-an-ninh-nhan-dan
+    published: '2026-04-23'
     source_type: official_school_admissions
     status: current_for_2026_intake
     evidence_grade: A
@@ -85,8 +85,28 @@ sources:
     evidence_grade: A
     verified_at: '2026-09-08'
 
+  - id: DHCSND-VB2-2026
+    authority: Trường Đại học Cảnh sát nhân dân
+    title: Thông báo tuyển sinh đào tạo trình độ đại học chính quy tuyển mới đối với công dân đã có bằng tốt nghiệp trình độ đại học trở lên năm 2026
+    url: https://dhcsnd.edu.vn/article/thong-bao-tuyen-sinh-dao-tao-trinh-do-dai-hoc-chinh-quy-tuyen-moi-doi-voi-cong-dan-da-co-bang-tot-nghiep-trinh-do-dai-hoc-tro-len-nam-2026
+    published: '2026-04-10'
+    source_type: official_school_admissions
+    status: current_for_2026_intake
+    evidence_grade: A
+    verified_at: '2026-09-08'
+
+  - id: T07-VB2-2026
+    authority: Học viện Kỹ thuật và Công nghệ an ninh - Bộ Công an
+    title: Thông tin tuyển sinh đại học văn bằng 2 chính quy tuyển mới năm 2026
+    url: https://hvktcnan.bocongan.gov.vn/TrangChu/tin-tuc/1966-thong-tin-tuyen-sinh-dai-hoc-van-bang-2-chinh-quy-tuyen-moi-doi-voi-nguoi-da-co-bang-tot-nghiep-trinh-do-dai-hoc-tro-len-nam-2026.html
+    published: '2026-05-05'
+    source_type: official_school_admissions
+    status: current_for_2026_intake
+    evidence_grade: A
+    verified_at: '2026-09-08'
+
   - id: PCCC-VB2-2026
-    authority: Học viện Phòng cháy chữa cháy và cứu nạn cứu hộ - Bộ Công an
+    authority: Trường Đại học Phòng cháy chữa cháy - Bộ Công an
     title: Tuyển sinh tuyển mới đại học chính quy CAND đối với công dân đã có bằng đại học trở lên năm 2026
     url: https://hocvienpccc.bocongan.gov.vn/blog/thong-bao-tuyen-sinh-tuyen-moi-dao-tao-trinh-do-dai-hoc-chinh-quy-cand-doi-voi-cong-dan-da-co-bang-tot-nghiep-trinh-do-dai-hoc-tro-len-nam-2026_7430
     published: '2026-03-24'
