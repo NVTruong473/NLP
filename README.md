@@ -1,117 +1,248 @@
-# VietRAG — Evidence-First RAG for Vietnamese Institutional Knowledge
+# CAND-VB2 RAG — Verified Police Second-Degree Admissions Assistant 2026
 
-> A personal NLP/LLM project that turns specialized documents into a grounded question-answering system with hybrid retrieval, out-of-domain refusal, source citations, evaluation, and a Colab-first demo.
+> Trợ lý RAG chuyên biệt về **tuyển mới đào tạo trình độ đại học chính quy Công an nhân dân đối với công dân đã có bằng tốt nghiệp đại học trở lên (VB2CA tuyển mới)**, tập trung đặc biệt vào người có văn bằng 1 **CNTT / Computer Science / IT**.
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/)
-[![Colab](https://img.shields.io/badge/Google%20Colab-ready-orange)](https://colab.research.google.com/)
+[![Google Colab](https://img.shields.io/badge/Google%20Colab-Run%20All-orange)](https://colab.research.google.com/github/NVTruong473/NLP/blob/main/notebooks/VietRAG_Colab.ipynb)
+[![Dataset](https://img.shields.io/badge/Dataset-Official%20sources%20only-success)](docs/DATASET.md)
+[![Verified](https://img.shields.io/badge/Verified-2026--09--08-brightgreen)](data/source_registry.yaml)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
-## Why this project exists
+## TL;DR
 
-Many RAG demos stop at **chunk → vector search → top-k → LLM**. That is not enough for institutional or specialized knowledge: the system must know when it does **not** have evidence, preserve source metadata, retrieve both semantic and exact lexical matches, and expose measurable failure modes.
+Clone/open the Colab notebook, upload your private API file to `/content/providers.env`, then run all cells. The project builds a local FAISS + BM25 index from **verified official-source snapshots already committed in the repository** and launches a Gradio chat app.
 
-VietRAG is built around that stricter requirement:
+**External AI providers used: Gemini + OpenRouter only.**
 
-- answers are grounded only in indexed documents;
-- factual claims are accompanied by `[S#]` citations;
-- clearly out-of-domain questions are rejected instead of answered from model memory;
-- dense retrieval and BM25 are fused before generation;
-- reranking is optional and failure-tolerant;
-- retrieval and refusal behavior are evaluated separately;
-- API keys and private documents are never committed.
+- Gemini: embeddings + primary answer generation.
+- OpenRouter: free generation fallback + optional free reranker.
+- FAISS, BM25, parsing, evaluation and Gradio: local runtime code, not additional AI providers.
 
-The default reproducible demo uses **public TDTU admissions and undergraduate-regulation pages**. The engine itself is domain-agnostic: replace those sources with policies, procedures, manuals, legal documents, product knowledge, finance documents, or another specialized corpus. **When using free API tiers, use public or otherwise non-sensitive documents only; see the privacy boundary below.**
+## Important current status — 08/09/2026
+
+The dataset was manually cross-checked against official Ministry of Public Security and CAND-school sources on **8 September 2026**.
+
+At that verification point:
+
+- the Ministry of Public Security still reports the 2026 VB2CA process as active and preparing for the computer-based assessment;
+- the system-wide 2026 quota is **530**;
+- the Ministry reports **5,123 Method-2 applicants**;
+- the assessment is scheduled for **20/09/2026**;
+- the ordinary initial registration window **15/03–15/06/2026** and the **20/08/2026** file-submission milestone have already passed.
+
+Therefore the assistant must **not** tell a person who never registered that normal 2026 registration is still open. A late/supplementary round may only be stated if a newer official notice explicitly confirms one.
 
 ---
 
-## Architecture
+# Why this project is different from a normal RAG demo
+
+A naive RAG project often does:
 
 ```text
-PDF / DOCX / TXT / HTML / explicit URLs
-                  │
-                  ▼
-        extraction + metadata
-                  │
-                  ▼
-       overlapping text chunks
-                  │
-        ┌─────────┴─────────┐
-        ▼                   ▼
- Gemini Embeddings         BM25
-  semantic search        exact terms
-        │                   │
-        └─────────┬─────────┘
-                  ▼
-        Reciprocal Rank Fusion
-                  │
-                  ▼
- OpenRouter rerank (optional/free)
-                  │
-                  ▼
-       retrieval-confidence gate
-           ┌──────┴───────┐
-         refuse         answerable
-                           │
-                           ▼
-                  grounded generation
-                  Gemini → OpenRouter
-                       fallback
-                           │
-                           ▼
-                  answer + citations
+web pages → chunks → embeddings → top-k → LLM
 ```
 
-Only **Gemini** and **OpenRouter** are used as external AI APIs. FAISS, BM25, document parsing and Gradio run locally in the Colab/runtime.
+That is unsafe for a time-sensitive admissions domain because old rules, unrelated “văn bằng 2” programs, and stale deadlines can be mixed together.
 
-See [Architecture](docs/ARCHITECTURE.md) for design rationale.
+CAND-VB2 RAG instead uses:
+
+```text
+Official source discovery
+        ↓
+Authority + date + legal-status verification
+        ↓
+Human-reviewed factual snapshots
+        ↓
+Provenance metadata on every document
+        ↓
+Gemini dense embeddings ─┐
+                         ├─> Reciprocal Rank Fusion
+BM25 lexical retrieval ──┘
+        ↓
+OpenRouter reranking (optional/free)
+        ↓
+Out-of-domain / evidence-confidence gate
+        ↓
+Gemini grounded generation
+        ↓ fallback
+OpenRouter free router
+        ↓
+Answer + [S#] citations + official URLs + verification date
+```
+
+The goal is not to make the LLM “know about police admissions”. The goal is to make it **refuse to claim anything that the verified evidence does not support**.
 
 ---
 
-## Core stack
+# Exact domain boundary
 
-| Layer | Choice | Why |
-|---|---|---|
-| Primary LLM | `gemini-3.8-flash` | Current Gemini Flash model, strong quality/speed and available on Gemini API free tier at the time of this project |
-| Fallback LLM | `openrouter/free` | Automatically routes to an available free OpenRouter model |
-| Embeddings | `gemini-embedding-001` | Free-tier text embedding model with retrieval task types |
-| Dense index | FAISS `IndexFlatIP` | Simple, exact cosine search after L2 normalization; ideal for Colab-scale experiments |
-| Lexical retrieval | BM25 | Recovers exact codes, dates, names and regulation terminology |
-| Fusion | Reciprocal Rank Fusion | Combines rankings without pretending raw BM25 and cosine scores share a scale |
-| Reranking | OpenRouter `/rerank` | Improves precision on a small candidate set; optional fallback behavior if unavailable |
-| UI | Gradio | One-command interactive demo in Colab |
-| Evaluation | Hit@k, Precision@k, Recall@k, MRR, nDCG@k, OOD rejection | Separates retrieval quality from domain-refusal behavior |
+This repository covers:
 
-All model names are configurable in `providers.env`; the code does not hard-code a paid model dependency.
+**VB2CA tuyển mới** = tuyển mới đào tạo đại học chính quy CAND dành cho a citizen who already has a university degree.
+
+It deliberately distinguishes this from:
+
+1. **văn bằng 2 dành cho cán bộ CAND đang công tác**;
+2. **ordinary CAND university admission from high school/THPT**;
+3. unrelated civilian second-degree programs.
+
+Those programs can have different quotas, candidates, exam formats and timelines. The prompt contains an explicit anti-confusion rule so the model cannot merge them simply because they all contain the phrase “văn bằng 2”.
 
 ---
 
-# Run on Google Colab
+# The dataset
 
-The recommended entry point is:
+The default knowledge base is stored directly in the repository:
 
-**`notebooks/VietRAG_Colab.ipynb`**
+```text
+data/
+├── corpus/
+│   ├── 00_current_status_2026-09-08.md
+│   ├── 01_eligibility_for_it_graduates.md
+│   ├── 02_registration_documents_timeline.md
+│   ├── 03_exam_structure_2026.md
+│   ├── 04_health_standards_current.md
+│   ├── 05_legal_basis_in_force.md
+│   ├── 05b_health_law_in_force.md
+│   ├── 06_school_options_for_it.md
+│   ├── 07_t07_technical_security_academy_2026.md
+│   └── 08_scope_and_disambiguation.md
+├── source_registry.yaml
+└── official_sources.yaml
+```
 
-### 1. Clone the repository
+Every curated Markdown file starts with provenance such as:
 
-```bash
+```yaml
+---
+source_id: BCA-EXAM-2026
+title: Cấu trúc Kỳ thi đánh giá VB2CA trên máy tính năm 2026
+authority: Bộ Công an
+official_url: https://bocongan.gov.vn/...
+published: '2026-06-17'
+verified_at: '2026-09-08'
+status: current_for_2026_exam
+scope: Kỳ thi Phương thức 2 VB2CA 2026
+---
+```
+
+This metadata is preserved all the way into each retrieval chunk and shown in the final evidence list.
+
+## Source quality policy
+
+Only Grade-A primary sources enter the curated truth set:
+
+- official Ministry of Public Security portal;
+- official Ministry legal-document database;
+- official websites of CAND academies/schools.
+
+Not accepted as authoritative evidence:
+
+- newspapers or news aggregators;
+- SEO articles;
+- coaching centers;
+- Facebook/TikTok/Zalo posts not issued by the competent authority;
+- forums and hearsay.
+
+See the complete [Dataset Card](docs/DATASET.md) and [Source Registry](data/source_registry.yaml).
+
+## Why the corpus is saved in GitHub instead of scraped every Colab run
+
+Government sites can temporarily fail, change HTML, move attachments or update pages. If the notebook re-scraped them every run, two users could unknowingly evaluate two different datasets.
+
+The default pipeline therefore indexes **committed, verified snapshots**. `data/official_sources.yaml` is provided only for optional live-refresh experiments.
+
+---
+
+# Key verified topics in the knowledge base
+
+The corpus is specifically designed to answer questions such as:
+
+- I already have an IT degree. Can I apply for VB2CA 2026?
+- Does a `Khá` IT degree have a direct-admission route?
+- Can a technical/IT graduate with a `Trung bình` degree ever satisfy the academic condition?
+- What if my degree does not print a classification?
+- Is field code `748` accepted?
+- Can I apply to Information Security at the People’s Security Academy?
+- Which schools/groups do not restrict the first-degree field for Method 2?
+- Where does a resident register for preliminary screening?
+- What documents are required?
+- Is the 2026 registration deadline already over on 08/09/2026?
+- What is the 20/09/2026 computer-based exam structure?
+- What are CA1, CA2, CA3 and CA4?
+- What public health thresholds apply, and what changes for an IT graduate?
+- Which admissions/health regulations are still marked in force?
+- How is VB2CA tuyển mới different from second-degree training for existing CAND officers?
+
+The assistant is intentionally **not** a substitute for official preliminary screening, medical examination, political-standard assessment or a newly issued Ministry notice.
+
+---
+
+# Quick start on Google Colab
+
+## Recommended: open the notebook
+
+[Open `notebooks/VietRAG_Colab.ipynb` in Google Colab](https://colab.research.google.com/github/NVTruong473/NLP/blob/main/notebooks/VietRAG_Colab.ipynb)
+
+Then choose **Runtime → Run all**.
+
+The notebook automatically:
+
+1. clones/updates this repository;
+2. installs dependencies;
+3. checks `/content/providers.env`;
+4. asks you to upload the file if it is missing;
+5. displays the verified source registry;
+6. builds the local FAISS/BM25 index from `data/corpus`;
+7. runs sample evidence-grounded questions;
+8. tests out-of-domain refusal;
+9. runs retrieval/OOD evaluation;
+10. can launch the Gradio app.
+
+## Manual Colab commands
+
+```python
 !git clone https://github.com/NVTruong473/NLP.git
 %cd NLP
+!pip -q install -r requirements.txt
+!pip -q install -e . --no-deps
 ```
 
-### 2. Install dependencies
+Then upload your key file to:
 
-```bash
-!pip install -q -r requirements.txt
-!pip install -q -e . --no-deps
+```text
+/content/providers.env
 ```
 
-### 3. Provide API keys safely
+Build the verified dataset index:
 
-Create a local file named `providers.env` using [providers.env.example](providers.env.example):
+```python
+!python scripts/build_index.py --input-dir data/corpus --env /content/providers.env
+```
+
+Ask one question:
+
+```python
+!python scripts/ask.py \
+  "Tôi có bằng đại học CNTT loại Khá thì năm 2026 có những hướng VB2 Công an nào?" \
+  --env /content/providers.env
+```
+
+Launch the app:
+
+```python
+!python app.py
+```
+
+---
+
+# `providers.env` — keep it private
+
+Create your own local file from `providers.env.example`:
 
 ```dotenv
 GEMINI_API_KEY_1=YOUR_KEY
-GEMINI_API_KEY_2=ANOTHER_KEY_IF_NEEDED
+# GEMINI_API_KEY_2=OPTIONAL_SECOND_KEY
 GEMINI_MODEL=gemini-3.8-flash
 GEMINI_EMBEDDING_MODEL=gemini-embedding-001
 
@@ -120,78 +251,169 @@ OPENROUTER_CHAT_MODEL=openrouter/free
 OPENROUTER_RERANK_MODEL=nvidia/llama-nemotron-rerank-vl-1b-v2:free
 ```
 
-Then upload it to the Colab runtime as:
+Although the reranking model name contains `nvidia`, the application calls it **only through the OpenRouter API**. There is no NVIDIA API integration or NVIDIA key in this project.
 
-```text
-/content/providers.env
-```
+## Why the real file is not in GitHub
 
-The notebook checks for `/content/providers.env`. If the file is missing it opens the Colab upload dialog. **It deliberately does not download this file from GitHub.**
+This repository is public. GitHub cannot make one committed file in a public repository visible only to its owner. If `providers.env` were committed, the keys would be public and remain recoverable from Git history after ordinary deletion.
 
-### Why not store `providers.env` in this public repo?
+Therefore:
 
-Because GitHub has no feature that makes one committed file inside a **public repository** visible only to the owner. Committing the file would expose the keys to anyone who can read the repository, including through Git history after later deletion.
+- `providers.env` is Git-ignored;
+- only `providers.env.example` is committed;
+- Colab checks `/content/providers.env` and opens an upload dialog when missing;
+- key values are never printed;
+- multiple Gemini/OpenRouter keys can be configured for legitimate failover/quota resilience.
 
-The repository therefore contains only `providers.env.example`, while `.gitignore` blocks `providers.env` and `*.env`.
-
-See [SECURITY.md](SECURITY.md).
-
-### 4. Build the demo index
-
-```bash
-!python scripts/build_index.py \
-  --sources data/demo_sources.yaml \
-  --env /content/providers.env
-```
-
-The demo pulls only explicitly listed official public pages, extracts their text, creates chunks, embeds them with Gemini, and stores the FAISS index under `artifacts/index/`.
-
-### 5. Ask a question
-
-```bash
-!python scripts/ask.py \
-  "TDTU có những phương thức tuyển sinh đại học nào trong năm 2026?" \
-  --env /content/providers.env
-```
-
-### 6. Launch the web UI
-
-```bash
-!python app.py
-```
-
-Gradio returns a temporary share link in Colab.
+If a key appears in a screenshot, public commit, notebook output or chat, revoke/rotate it.
 
 ---
 
-# Use your own documents
+# Retrieval architecture
 
-Upload **public or otherwise non-sensitive** files into:
+## Dense retrieval — Gemini embeddings
+
+`gemini-embedding-001` embeds curated documents using the retrieval-document task and questions using the question-answering task. Vectors are L2-normalized and stored in FAISS `IndexFlatIP`, making inner product equivalent to cosine similarity.
+
+## BM25
+
+BM25 complements semantic retrieval for exact entities that matter heavily in admissions:
+
+- `99/2025/TT-BCA`;
+- `131/2025/TT-BCA`;
+- `748`, `74802`, `7480202`;
+- dates such as `15/06/2026`, `20/08/2026`, `20/09/2026`;
+- CA1/CA2/CA3/CA4;
+- school names and abbreviations.
+
+## Reciprocal Rank Fusion
+
+Dense and BM25 raw scores have different scales, so the pipeline does not naively average them. It fuses ranks:
 
 ```text
-data/uploads/
+RRF(d) = Σ weight_r / (k + rank_r(d))
 ```
 
-Then build an index without the public demo sources:
+## OpenRouter reranker
 
-```bash
+The fused candidate set can be reranked through OpenRouter. The configured reranker is currently a free OpenRouter endpoint. Reranking is an optimization, not a single point of failure: if it is unavailable/rate-limited, the system falls back to fused results.
+
+## OOD/evidence gate
+
+Before generation, top dense evidence confidence is checked. Clearly unrelated questions are refused before Gemini/OpenRouter can answer from model memory.
+
+The threshold in `configs/default.yaml` is deliberately calibratable rather than presented as universal truth.
+
+---
+
+# Temporal and legal guardrails
+
+This domain is unusually sensitive to time.
+
+The generation prompt requires the model to:
+
+- surface each source's `verified_at` and `status` metadata;
+- state when a deadline has already passed;
+- prefer current Ministry/legal-database evidence over older material;
+- never invent a late/supplementary round;
+- distinguish current rules from historical admissions;
+- refuse when evidence is insufficient.
+
+For legal status, the curated dataset records that at the 08/09/2026 verification point:
+
+- `99/2025/TT-BCA`, amending admissions regulation `50/2021/TT-BCA`, is marked **Còn hiệu lực** by the Ministry legal database and effective from 06/01/2026;
+- `131/2025/TT-BCA`, amending CAND special-health regulation `62/2023/TT-BCA`, is marked **Còn hiệu lực** and effective from 25/12/2025.
+
+This is a **versioned 2026 snapshot**. Do not use it in 2027 without re-verification.
+
+---
+
+# Evaluation
+
+## Retrieval + OOD
+
+```python
+!python scripts/evaluate.py --env /content/providers.env
+```
+
+The starter benchmark contains questions about:
+
+- IT-degree eligibility;
+- degree classification/GPA;
+- age;
+- school/major selection;
+- preliminary screening and documents;
+- expired deadlines/current status;
+- exam structure;
+- health/legal rules;
+- near-domain confusion;
+- unrelated OOD questions.
+
+Metrics:
+
+- Hit@k
+- Precision@k
+- Recall@k
+- MRR
+- nDCG@k
+- in-domain acceptance rate
+- OOD rejection rate
+- balanced OOD accuracy
+
+Retrieval metrics are computed over **unique source IDs**, not repeated chunks of the same document.
+
+## Calibrate OOD
+
+```python
+!python scripts/calibrate_ood.py --env /content/providers.env
+```
+
+## Generation diagnostics
+
+```python
+!python scripts/evaluate_generation.py --env /content/providers.env
+```
+
+This optionally scores:
+
+- faithfulness;
+- answer relevancy;
+- coherence;
+- evidence completeness;
+- citation coverage.
+
+LLM-as-judge metrics are diagnostics, not ground truth. A serious report should add a human-reviewed held-out test set.
+
+---
+
+# Recommended research ablations
+
+| Experiment | Question |
+|---|---|
+| Dense only | How strong is semantic retrieval alone? |
+| BM25 only | How much do exact legal codes/dates help? |
+| Dense + BM25 + RRF | Does hybrid retrieval improve recall? |
+| Hybrid + reranker | Does second-stage ranking improve precision? |
+| Different chunk sizes | What granularity best preserves rules and exceptions? |
+| top-k sweep | Where does extra context become noise? |
+| OOD threshold sweep | False-accept vs false-reject trade-off |
+| Remove temporal snapshot | How much does explicit current-status evidence reduce stale answers? |
+| Remove disambiguation document | How often does the model confuse civilian VB2CA with officer-only VB2? |
+
+---
+
+# Optional live-source build
+
+The reproducible default should remain the curated corpus. To experimentally combine the snapshot with live official pages:
+
+```python
 !python scripts/build_index.py \
-  --sources "" \
-  --input-dir data/uploads \
+  --sources data/official_sources.yaml \
+  --input-dir data/corpus \
   --env /content/providers.env
 ```
 
-Supported formats:
-
-- text-based `.pdf`
-- `.docx`
-- `.txt` / `.md`
-- `.html` / `.htm`
-- explicit HTTP/HTTPS URLs in a YAML source list
-
-`data/uploads/` is Git-ignored so local files are not accidentally committed. **Git privacy is not API privacy:** document text is still sent to Gemini for embeddings/generation and may be sent to OpenRouter for reranking/fallback generation. On free tiers, do not use confidential, personal, regulated, or proprietary internal documents.
-
-> Scanned PDFs that contain only images are not silently OCR'd in v1. A robust product should measure OCR quality separately rather than pretending empty extraction is valid text.
+Do not publish benchmark results from a live corpus without storing its exact version/date, because web content can change.
 
 ---
 
@@ -199,19 +421,19 @@ Supported formats:
 
 ```text
 .
-├── app.py                         # Gradio app
-├── configs/
-│   └── default.yaml               # Chunking/retrieval/generation settings
+├── app.py
+├── configs/default.yaml
 ├── data/
-│   ├── README.md
-│   └── demo_sources.yaml          # Public reproducible demo corpus
+│   ├── corpus/                    # verified 2026 snapshots
+│   ├── official_sources.yaml      # optional live URLs
+│   ├── source_registry.yaml       # provenance / validity registry
+│   └── README.md
 ├── docs/
 │   ├── ARCHITECTURE.md
+│   ├── DATASET.md
 │   └── EVALUATION.md
-├── evaluation/
-│   └── sample_eval.jsonl          # Small starter benchmark
-├── notebooks/
-│   └── VietRAG_Colab.ipynb        # End-to-end Colab workflow
+├── evaluation/sample_eval.jsonl
+├── notebooks/VietRAG_Colab.ipynb
 ├── scripts/
 │   ├── ask.py
 │   ├── build_index.py
@@ -228,8 +450,7 @@ Supported formats:
 │   ├── providers.py
 │   ├── retrieval.py
 │   └── secrets.py
-├── tests/
-│   └── test_core.py
+├── tests/test_core.py
 ├── providers.env.example
 ├── SECURITY.md
 ├── requirements.txt
@@ -238,192 +459,63 @@ Supported formats:
 
 ---
 
-# How retrieval works
+# Primary official evidence used
 
-## 1. Dense semantic retrieval
+The canonical URLs and verification status live in `data/source_registry.yaml`. Major sources include:
 
-Documents are embedded with Gemini using a retrieval-document task; questions use a question-answering retrieval task. Embeddings are L2-normalized and searched with FAISS inner product, which becomes cosine similarity after normalization.
-
-## 2. BM25 lexical retrieval
-
-BM25 runs over Unicode-aware lower-cased tokens. It complements dense search for details such as:
-
-- decision numbers;
-- dates;
-- course/program names;
-- abbreviations;
-- exact Vietnamese legal/academic phrases.
-
-## 3. Reciprocal Rank Fusion
-
-Instead of min-max scaling incomparable raw scores, VietRAG fuses **ranks**:
-
-```text
-RRF(d) = Σ weight_r / (k + rank_r(d))
-```
-
-This is intentionally simple, robust and easy to ablate.
-
-## 4. Reranking
-
-The fused candidate set can be sent to OpenRouter's rerank endpoint. If the configured free reranker is unavailable or rate-limited, the request does **not** crash the RAG system: it falls back to top fused results.
-
-## 5. Domain/OOD gate
-
-A specialized RAG assistant should not answer an unrelated question merely because Gemini or an OpenRouter model knows the answer. VietRAG checks retrieval confidence before generation and refuses low-confidence queries.
-
-The default threshold in `configs/default.yaml` is a starting value, **not a universal truth**. Use the calibration script on your own labeled queries:
-
-```bash
-!python scripts/calibrate_ood.py --env /content/providers.env
-```
-
-Then update:
-
-```yaml
-retrieval:
-  ood_dense_threshold: YOUR_CALIBRATED_VALUE
-```
-
----
-
-# Evaluation
-
-Run the starter retrieval/OOD benchmark:
-
-```bash
-!python scripts/evaluate.py --env /content/providers.env
-```
-
-Reported retrieval/OOD metrics:
-
-- Hit@k
-- Precision@k
-- Recall@k
-- MRR
-- nDCG@k
-- OOD rejection accuracy
-
-For optional LLM-as-judge diagnostics (faithfulness, answer relevancy, coherence, evidence completeness and citation coverage):
-
-```bash
-!python scripts/evaluate_generation.py --env /content/providers.env
-```
-
-For a serious report, expand `evaluation/sample_eval.jsonl` into a held-out benchmark with multiple question types, difficult paraphrases, exact-lookup questions, multi-hop questions, and adversarial/out-of-domain questions.
-
-Recommended ablations:
-
-| Experiment | What it tests |
-|---|---|
-| Dense only | semantic retriever baseline |
-| BM25 only | lexical baseline |
-| Dense + BM25 + RRF | value of hybrid retrieval |
-| Hybrid + reranker | value of second-stage ranking |
-| chunk size sweep | context granularity vs recall |
-| top-k sweep | recall vs context noise |
-| OOD threshold sweep | false accept vs false reject trade-off |
-
-See [Evaluation protocol](docs/EVALUATION.md).
-
----
-
-# API key rotation
-
-`GEMINI_API_KEY_1...N` and `OPENROUTER_API_KEY_1...N` are supported. The provider layer rotates to another configured key when one key encounters an API/rate-limit failure.
-
-The application prints only the **number** of loaded keys, never the values.
-
-This is a resiliency mechanism for legitimate quotas; it is not intended to bypass provider terms or restrictions.
-
----
-
-# Free-tier strategy
-
-This project is designed to be usable without a paid inference server:
-
-1. Gemini is the primary LLM and embedding provider.
-2. OpenRouter uses `openrouter/free` as the generation fallback.
-3. Reranking is optional and must fail gracefully.
-4. FAISS/BM25/document extraction run locally in Colab.
-5. Index artifacts are persisted locally for the session so documents are not re-embedded for every question.
-
-### Free-tier privacy boundary
-
-Zero-cost API access is appropriate for this project's public demo and other non-sensitive experimentation, **not for confidential internal knowledge**. Google states that content on the Gemini API free tier may be used to improve its products, and some OpenRouter free endpoints have provider-specific logging/data-use terms. Review the current provider terms before changing this boundary. If confidentiality is a requirement, free-tier-only is the wrong deployment constraint.
-
-Free tiers and model availability can change. Treat model names as configuration, not permanent assumptions.
-
----
-
-# Security checklist
-
-Before pushing changes:
-
-```bash
-git status
-git grep -nE "(GEMINI_API_KEY|OPENROUTER_API_KEY).*=" -- ':!providers.env.example'
-```
-
-Confirm that:
-
-- `providers.env` is not tracked;
-- private documents are not tracked;
-- generated indexes are not tracked;
-- screenshots/logs do not contain keys;
-- the corpus is safe to send to the configured Gemini/OpenRouter API tiers.
-
-If an API key ever appears in a public screenshot, chat, commit or log, rotate/revoke it immediately.
-
----
-
-# Research basis
-
-This implementation intentionally borrows ideas from established retrieval/RAG work rather than adding fashionable components without a measurable role:
-
-- **Retrieval-Augmented Generation** — Lewis et al., 2020: https://arxiv.org/abs/2005.11401
-- **BM25 and probabilistic relevance** — Robertson & Zaragoza, 2009: https://doi.org/10.1561/1500000019
-- **RAGAS** — component-level RAG evaluation: https://docs.ragas.io/
-- **RAGChecker** — fine-grained retrieval/generation diagnostics: https://arxiv.org/abs/2408.08067
-- **Gemini Embeddings** — retrieval-oriented embedding task types: https://ai.google.dev/gemini-api/docs/embeddings
-- **OpenRouter RAG / rerank API** — embeddings, reranking and chat pipeline patterns: https://openrouter.ai/docs/guides/evaluate-and-optimize/rag
-
-The project does not claim that an architecture is superior until it is tested on the target corpus. The evaluation and ablation structure exists specifically to challenge that assumption.
+- Ministry of Public Security — 2026 CAND admissions information:  
+  https://www.bocongan.gov.vn/bai-viet/thong-tin-tuyen-sinh-cac-hoc-vien-truong-cong-an-nhan-dan-nam-2026-1773897621
+- Ministry of Public Security — 2026 computer-based VB2CA sample exam/structure:  
+  https://bocongan.gov.vn/bai-viet/cong-bo-de-thi-minh-hoa-ky-thi-van-bang-2-cong-an-tren-may-tinh-1781667002
+- Ministry of Public Security — current organizational review dated 08/09/2026:  
+  https://www.bocongan.gov.vn/bai-viet/ra-soat-cong-tac-to-chuc-ky-thi-danh-gia-tren-may-tinh-va-ban-ve-de-an-dua-tieng-anh-tro-thanh-ngon-ngu-thu-hai-trong-truong-hoc-1788850887
+- Ministry legal database — `99/2025/TT-BCA`:  
+  https://vanban.bocongan.gov.vn/co-so-du-lieu-van-ban/thong-tu-sua-doi-bo-sung-mot-so-dieu-cua-thong-tu-so-50-2021-tt-bca-ngay-11-5-2021-cua-bo-truong-bo-cong-an-quy-dinh-ve-tuyen-sinh-trong-cong-an-nhan-dan-1763108661?tab=attributes
+- Ministry legal database — `131/2025/TT-BCA`:  
+  https://vanban.bocongan.gov.vn/co-so-du-lieu-van-ban/thong-tu-sua-doi-bo-sung-mot-so-dieu-cua-thong-tu-so-62-2023-tt-bca-ngay-14-11-2023-cua-bo-truong-bo-cong-an-quy-dinh-ve-tieu-chuan-suc-khoe-dac-thu-va-kham-suc-khoe-doi-voi-luc-luong-cong-an-nhan-dan-1768967121
+- Học viện Kỹ thuật và Công nghệ an ninh — VB2 2026:  
+  https://hvktcnan.bocongan.gov.vn/TrangChu/tin-tuc/1966-thong-tin-tuyen-sinh-dai-hoc-van-bang-2-chinh-quy-tuyen-moi-doi-voi-nguoi-da-co-bang-tot-nghiep-trinh-do-dai-hoc-tro-len-nam-2026.html
+- Học viện Cảnh sát nhân dân — VB2 tuyển mới 2026-2027:  
+  https://hvcsnd.edu.vn/thong-bao-ke-hoach-tuyen-sinh-dai-hoc-van-bang-2-tuyen-moi-nam-hoc-2026-2027-13815
+- Trường Đại học An ninh nhân dân — tuyển sinh 2026:  
+  https://dhannd.bocongan.gov.vn/Thong-tin-tuyen-sinh/thong-bao-tuyen-sinh-tuyen-moi-dao-tao-trinh-do-dai-hoc-chinh-quy-nam-2026-a-4201
+- Học viện/Trường PCCC — VB2CA 2026:  
+  https://hocvienpccc.bocongan.gov.vn/blog/thong-bao-tuyen-sinh-tuyen-moi-dao-tao-trinh-do-dai-hoc-chinh-quy-cand-doi-voi-cong-dan-da-co-bang-tot-nghiep-trinh-do-dai-hoc-tro-len-nam-2026_7430
 
 ---
 
 # Limitations
 
-- The starter demo corpus is small and public; it is not a production knowledge base.
-- Retrieval-confidence thresholds require domain-specific calibration.
-- LLM citations are constrained by prompting but should still be audited in high-stakes deployments.
-- HTML extraction is generic and may include boilerplate on unusual sites.
-- OCR and table-aware multimodal parsing are intentionally deferred until they can be evaluated properly.
-- Free API quotas and free model availability can change over time.
-- The free-tier configuration is not suitable for confidential internal data because external APIs receive document/query content and their data-use terms may permit logging or product improvement.
+- This is a verified snapshot **as of 08/09/2026**, not a promise that no later notice will change the process.
+- Political-standard assessment cannot be reduced to an LLM checklist; competent CAND authorities conduct the official assessment.
+- Health figures in the corpus are public screening criteria; official medical examination decides eligibility.
+- Some official appendices may contain details that are not conveniently represented in public HTML.
+- The starter benchmark is useful for engineering iteration but should be expanded before making academic claims about state-of-the-art quality.
+- Gemini/OpenRouter free tiers have quotas and may change availability.
+- Google states Gemini API free-tier content may be used to improve products; this project therefore uses public official data by default. Do not upload confidential personal dossiers into free-tier APIs.
 
 ---
 
 # Roadmap
 
-- [x] Gemini + OpenRouter provider abstraction with key rotation
-- [x] PDF/DOCX/TXT/HTML/URL ingestion
-- [x] Gemini dense embeddings + FAISS
-- [x] BM25 + Reciprocal Rank Fusion
-- [x] OpenRouter reranking with graceful fallback
-- [x] OOD refusal gate
-- [x] inline source citations
-- [x] retrieval/OOD evaluation
-- [x] threshold calibration
-- [x] Colab + Gradio demo
-- [ ] query decomposition for genuinely multi-hop questions
-- [ ] table-aware extraction benchmark
-- [ ] multimodal scanned-PDF ingestion benchmark
-- [ ] human-evaluated Vietnamese benchmark
-- [ ] persistent vector database adapter for larger deployments
-- [ ] observability dashboard for latency, quota and retrieval failure analysis
-
----
+- [x] verified official-source 2026 corpus
+- [x] current legal-status registry
+- [x] IT-first eligibility knowledge
+- [x] temporal deadline guardrails
+- [x] distinction between civilian VB2CA and officer-only programs
+- [x] Gemini dense retrieval
+- [x] BM25 + RRF hybrid retrieval
+- [x] OpenRouter reranking with fallback
+- [x] source provenance propagated to chunks
+- [x] official URL + verification date displayed with answers
+- [x] OOD refusal/calibration
+- [x] retrieval + generation evaluation
+- [x] Google Colab Run-All workflow
+- [x] Gradio chat UI
+- [ ] larger human-annotated benchmark (100–300 questions)
+- [ ] automatic official-source change detection/versioning
+- [ ] structured rule engine for deterministic eligibility pre-check before LLM explanation
+- [ ] 2027 dataset version when official 2027 guidance is published
 
 ## License
 
