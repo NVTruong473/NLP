@@ -118,6 +118,10 @@ class VietRAGPipeline:
         for i, item in enumerate(answer.sources, start=1):
             label = item.chunk.title or item.chunk.source
             meta: list[str] = []
+            if item.chunk.evidence_grade:
+                meta.append(f"{item.chunk.evidence_grade}")
+            if item.chunk.temporal_class:
+                meta.append(item.chunk.temporal_class)
             if item.chunk.section:
                 meta.append(f"mục: {item.chunk.section}")
             if item.chunk.authority:
@@ -125,7 +129,9 @@ class VietRAGPipeline:
             if item.chunk.verified_at:
                 meta.append(f"xác minh {item.chunk.verified_at}")
             if item.chunk.status:
-                meta.append(f"{item.chunk.status}")
+                meta.append(item.chunk.status)
+            if item.chunk.change_risk and item.chunk.change_risk not in {"annual_expiry", "normal_regulatory_change_risk"}:
+                meta.append(f"change-risk={item.chunk.change_risk}")
             if item.chunk.page is not None:
                 meta.append(f"trang {item.chunk.page}")
             score_bits = []
