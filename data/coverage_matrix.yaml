@@ -1,0 +1,119 @@
+dataset: CAND-VB2-2026 Verified Knowledge Base
+verified_at: '2026-09-08'
+confidence_target: 0.95
+policy: >-
+  A topic is marked verified only when enough public official evidence exists for the claim class.
+  partial_public is not treated as missing data to be guessed; the assistant must expose the gap.
+
+allowed_partial_topics:
+  - exam_day_candidate_rules
+  - exact_blank_forms
+
+topics:
+  eligibility_general:
+    status: verified
+    critical: true
+    sources: [BCA-TS-2026]
+  eligibility_it_degree:
+    status: verified
+    critical: true
+    sources: [BCA-TS-2026, HVANND-VB2-2026, T07-VB2-2026]
+  age_and_degree_classification:
+    status: verified
+    critical: true
+    sources: [BCA-TS-2026, BGDDT-LAW-06-2026, BGDDT-LAW-08-2021]
+  schools_majors_regional_scope:
+    status: verified
+    critical: true
+    sources: [BCA-TS-2026, HVANND-VB2-2026, HVCSND-VB2-2026, DHANND-VB2-2026, DHCSND-VB2-2026, T07-VB2-2026, PCCC-VB2-2026]
+  registration_location:
+    status: verified
+    critical: true
+    sources: [T07-VB2-2026, PCCC-VB2-2026, CAT-VINHLONG-VB2-2026]
+  registration_documents:
+    status: verified
+    critical: true
+    sources: [DHCSND-VB2-2026, DHANND-VB2-2026, CAT-VINHLONG-VB2-2026]
+  official_form_names_and_workflow:
+    status: verified
+    critical: true
+    sources: [DHCSND-VB2-2026, CAT-CAMAU-FORMS-2026]
+  exact_blank_forms:
+    status: partial_public
+    critical: false
+    sources: [DHCSND-VB2-2026, CAT-CAMAU-FORMS-2026]
+    gap: >-
+      No sufficiently authoritative public blank 2026 VB2CA form was found to mirror as a nationwide canonical template.
+      The competent local police unit supplies/checks the actual forms.
+  form_filling_and_error_checking:
+    status: verified
+    critical: true
+    sources: [DHCSND-VB2-2026, CAT-CAMAU-FORMS-2026, CAT-CAMAU-PROCEDURE-2026]
+  local_real_world_registration_workflow:
+    status: verified
+    critical: false
+    sources: [CAT-CAMAU-PROCEDURE-2026, CAT-VINHLONG-VB2-2026]
+  health_screening:
+    status: verified
+    critical: true
+    sources: [BCA-LAW-62-2023, BCA-LAW-131-2025, HVCSND-VB2-2026, CAT-CAMAU-PROCEDURE-2026]
+  political_standard_public_boundary:
+    status: verified
+    critical: true
+    sources: [BCA-POLITICAL-48-2023, BCA-TS-2026]
+  exam_date_and_duration:
+    status: verified
+    critical: true
+    sources: [BCA-EXAM-2026, BCA-CURRENT-2026-09-08]
+  exam_structure_and_scoring:
+    status: verified
+    critical: true
+    sources: [BCA-EXAM-2026]
+  exam_codes_by_school_major:
+    status: verified
+    critical: true
+    sources: [BCA-EXAM-2026, HVANND-VB2-2026, T07-VB2-2026, PCCC-VB2-2026]
+  exam_syllabus_ca1_ca4:
+    status: verified
+    critical: true
+    sources: [BCA-EXAM-2026]
+  official_sample_tests_ca1_ca4:
+    status: verified
+    critical: true
+    sources: [BCA-EXAM-2026]
+  exam_day_candidate_rules:
+    status: partial_public
+    critical: false
+    sources: [BCA-CURRENT-2026-09-08, DHANND-VB2-2026, DHCSND-VB2-2026]
+    gap: >-
+      At 2026-09-08, the verified public corpus does not yet contain a complete VB2CA computer-exam candidate notice covering
+      exact check-in time, late-arrival cutoff, allowed calculator/items and all room procedures. Do not transplant rules from other CAND exams.
+  method2_score_formula:
+    status: verified
+    critical: true
+    sources: [BCA-EXAM-2026]
+  results_and_appeals_timeline:
+    status: verified
+    critical: true
+    sources: [DHCSND-VB2-2026, PCCC-VB2-2026]
+  enrollment_and_post_admission_verification:
+    status: verified
+    critical: true
+    sources: [DHCSND-VB2-2026, PCCC-VB2-2026]
+  current_2026_status:
+    status: verified
+    critical: true
+    sources: [BCA-CURRENT-2026-09-08]
+  legal_basis_current:
+    status: verified
+    critical: true
+    sources: [BCA-LAW-99-2025, BCA-LAW-62-2023, BCA-LAW-131-2025, BGDDT-LAW-06-2026]
+  future_change_monitoring:
+    status: verified
+    critical: true
+    sources: [BCA-LAW-99-2025]
+    note: Draft replacement is kept watch-only and is never answer evidence.
+  domain_disambiguation:
+    status: verified
+    critical: true
+    sources: [BCA-TS-2026, HVCSND-VB2-2026]
