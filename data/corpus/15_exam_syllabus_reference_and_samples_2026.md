@@ -2,7 +2,7 @@
 source_id: BCA-EXAM-2026
 title: Phạm vi ôn thi, dạng câu hỏi, tài liệu tham khảo và đề minh họa VB2CA 2026
 authority: Bộ Công an / Học viện Cảnh sát nhân dân
- official_url: https://hvcsnd.edu.vn/cong-bo-cau-truc-dinh-dang-de-thi-de-thi-minh-hoa-ky-thi-van-bang-2-cong-an-tren-may-tinh-14045
+official_url: https://hvcsnd.edu.vn/cong-bo-cau-truc-dinh-dang-de-thi-de-thi-minh-hoa-ky-thi-van-bang-2-cong-an-tren-may-tinh-14045
 published: '2026-06-17'
 verified_at: '2026-09-08'
 status: current_for_2026_exam
