@@ -1,0 +1,34 @@
+verified_at: '2026-09-08'
+policy: Known conflicts/typos are recorded explicitly so the RAG does not silently choose one source or propagate an apparent source error.
+
+issues:
+  - id: HVANND-LEGAL-NUMBER-TYPO-2026
+    severity: high
+    source_id: HVANND-VB2-2026
+    issue: The Học viện An ninh nhân dân 2026 admissions page appears to cite "313/2025/TT-BCA" for the amended health regulation in one location.
+    authoritative_resolution: Use 131/2025/TT-BCA.
+    evidence:
+      - BCA-LAW-131-2025
+      - BCA-TS-2026
+      - HVCSND-VB2-2026
+      - PCCC-VB2-2026
+    rationale: The official Bộ Công an legal database identifies 131/2025/TT-BCA as the amendment to 62/2023/TT-BCA and marks it in force from 25/12/2025. Multiple 2026 official admissions notices use the same number.
+    rag_rule: Never output 313/2025/TT-BCA as the governing health amendment unless a later authoritative legal record establishes it.
+
+  - id: VB2-EXAM-DATE-WINDOW-2026
+    severity: medium
+    issue: Official sources use both 19-20/09/2026 and 20/09/2026 when describing the VB2CA computer-based examination.
+    resolution: Treat 19-20/09/2026 as the official organization window and 20/09/2026 as the scheduled main test date where the specific exam notice says so. Do not call this a contradiction without context.
+    evidence:
+      - BCA-CURRENT-2026-09-08
+      - BCA-EXAM-2026
+    rag_rule: When asked for the exam date, state the distinction and cite both sources if available.
+
+  - id: ADMISSIONS-REGULATION-FUTURE-CHANGE-RISK-2026-08
+    severity: critical_for_future_claims
+    issue: Although 99/2025/TT-BCA is currently in force, Bộ Công an opened consultation on 13-23/08/2026 for a new draft Circular "quy định về tuyển sinh trong Công an nhân dân".
+    resolution: Current 2026 answers continue to use in-force law and official 2026 admissions guidance. Future-cycle answers must not assume the 50/2021 + 99/2025 framework remains unchanged.
+    evidence:
+      - BCA-LAW-99-2025
+      - BCA-DRAFT-ADMISSIONS-2026-08
+    rag_rule: If the user asks about 2027/future rules, explicitly say a replacement/new admissions circular was under official consultation in August 2026 and current 2026 rules require re-verification before extrapolation.
