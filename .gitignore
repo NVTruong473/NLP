@@ -1,0 +1,26 @@
+# Secrets
+providers.env
+*.env
+!.env.example
+!providers.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Runtime artifacts
+artifacts/
+*.index
+*.npy
+*.npz
+
+# Data that may be private or large
+data/private/
+data/uploads/
+
+# Notebooks / OS
+.ipynb_checkpoints/
+.DS_Store
