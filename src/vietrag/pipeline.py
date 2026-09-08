@@ -63,6 +63,7 @@ class VietRAGPipeline:
             rrf_k=r.rrf_k,
             dense_weight=r.dense_weight,
             bm25_weight=r.bm25_weight,
+            max_chunks_per_source=r.max_chunks_per_source,
             reranker=self.openrouter,
             rerank_top_k=r.rerank_top_k,
         )
@@ -117,6 +118,8 @@ class VietRAGPipeline:
         for i, item in enumerate(answer.sources, start=1):
             label = item.chunk.title or item.chunk.source
             meta: list[str] = []
+            if item.chunk.section:
+                meta.append(f"mục: {item.chunk.section}")
             if item.chunk.authority:
                 meta.append(item.chunk.authority)
             if item.chunk.verified_at:
