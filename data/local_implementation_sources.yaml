@@ -1,0 +1,50 @@
+# Tier A2 sources: official provincial/local police implementation notices.
+# These may explain HOW a locality implemented the 2026 admissions process, but
+# must never override A0 central/legal rules or A1 school-specific rules and
+# must not be generalized to another province without an official source there.
+
+policy:
+  evidence_grade: A2
+  use: local_procedure_only
+  precedence: A0 > A1 > A2
+  verified_at: '2026-09-08'
+
+sources:
+  - id: CAT-CAMAU-PROCEDURE-2026
+    authority: Công an tỉnh Cà Mau
+    title: Nhiều điểm mới trong công tác tuyển sinh văn bằng 2 Công an nhân dân năm 2026
+    url: https://congan.camau.gov.vn/ch6/1972-Nhieu-diem-moi-trong-cong-tac-tuyen-sinh-van-bang-2-Cong-an-nhan-dan-doi-voi-cong-dan-da-co-bang-tot-nghiep-dai-hoc-chinh-quy.mhtml
+    published: '2026-04-06'
+    source_type: official_local_police_implementation
+    temporal_class: ANNUAL_2026
+    status: local_implementation_2026
+    change_risk: locality_specific_annual
+    evidence_grade: A2
+    verified_at: '2026-09-08'
+    scope: Quy trình tiếp nhận hồ sơ, khám sức khỏe, hướng dẫn ghi hồ sơ và nộp hồ sơ tại Cà Mau
+
+  - id: CAT-CAMAU-FORMS-2026
+    authority: Công an tỉnh Cà Mau
+    title: Hướng dẫn hoàn thiện hồ sơ cho 138 thí sinh dự tuyển Văn bằng 2 vào các trường CAND năm 2026
+    url: https://congan.camau.gov.vn/ch40/8514-Huong-dan-hoan-thien-ho-so-cho-138-thi-sinh-du-tuyen-Van-bang-2-vao-cac-truong-CAND-nam-2026.mhtml
+    published: '2026-07-09'
+    source_type: official_local_police_implementation
+    temporal_class: ANNUAL_2026
+    status: local_implementation_2026
+    change_risk: locality_specific_annual
+    evidence_grade: A2
+    verified_at: '2026-09-08'
+    scope: Xác nhận thực tế cán bộ tuyển sinh hướng dẫn kê khai và kiểm tra giấy tờ sau sơ tuyển sức khỏe
+
+  - id: CAT-VINHLONG-VB2-2026
+    authority: Công an tỉnh Vĩnh Long
+    title: Thông báo tuyển sinh đào tạo đại học Văn bằng 2 chính quy tuyển mới CAND năm 2026
+    url: https://congan.vinhlong.gov.vn/thong-bao/cong-an-tinh-vinh-long-thong-bao-tuyen-sinh-dao-tao-dai-hoc-van-bang-2-vb2ca-chinh-quy-tuyen-moi-trong-cong-an-nhan-dan-nam-2026-2062.html
+    published: '2026-03-19'
+    source_type: official_local_police_implementation
+    temporal_class: ANNUAL_2026
+    status: local_implementation_2026
+    change_risk: locality_specific_annual
+    evidence_grade: A2
+    verified_at: '2026-09-08'
+    scope: Giấy tờ mang khi sơ tuyển, ảnh hồ sơ, địa điểm đăng ký và hướng dẫn triển khai tại Vĩnh Long
