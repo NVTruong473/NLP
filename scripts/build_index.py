@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+from dataclasses import asdict
 from pathlib import Path
 
 import yaml
@@ -8,9 +9,13 @@ import yaml
 from vietrag.chunking import chunk_segments
 from vietrag.config import load_config
 from vietrag.ingest import load_path, load_url
+from vietrag.persistence import corpus_fingerprint, index_ready, read_manifest, write_manifest
 from vietrag.providers import GeminiProvider
 from vietrag.retrieval import HybridIndex
 from vietrag.secrets import key_summary, load_provider_env
+
+
+EMBEDDING_DIMENSIONS = 768
 
 
 def main():
@@ -25,11 +30,42 @@ def main():
     )
     parser.add_argument("--input-dir", default="data/corpus")
     parser.add_argument("--env", default="/content/providers.env")
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Rebuild even if the persisted index fingerprint already matches.",
+    )
     args = parser.parse_args()
 
     load_provider_env(args.env)
     print("Loaded provider credentials (values hidden):", key_summary())
     cfg = load_config(args.config)
+    embedder = GeminiProvider()
+
+    fingerprint_inputs: list[str | Path] = []
+    if args.input_dir:
+        fingerprint_inputs.append(args.input_dir)
+    if args.sources and Path(args.sources).is_file():
+        fingerprint_inputs.append(args.sources)
+
+    fingerprint = corpus_fingerprint(
+        fingerprint_inputs,
+        chunking=asdict(cfg.chunking),
+        embedding_model=embedder.models.gemini_embedding,
+        embedding_dimensions=EMBEDDING_DIMENSIONS,
+    )
+    previous = read_manifest(cfg.index_dir)
+    if (
+        not args.force
+        and index_ready(cfg.index_dir)
+        and previous
+        and previous.get("fingerprint") == fingerprint
+    ):
+        print(f"Persistent index is already current: {cfg.index_dir}")
+        print("Fingerprint:", fingerprint[:16])
+        print("Skip rebuild and skip Gemini re-embedding.")
+        return
+
     segments = []
 
     if args.sources and Path(args.sources).is_file():
@@ -75,12 +111,23 @@ def main():
         raise SystemExit("No chunks were created. Check data/corpus or the supplied official sources.")
 
     sources = sorted({chunk.source for chunk in chunks})
-    print(f"Corpus: {len(segments)} segments -> {len(chunks)} chunks from {len(sources)} source IDs")
+    print(f"Corpus: {len(segments)} semantic segments -> {len(chunks)} chunks from {len(sources)} source IDs")
     print("Source IDs:", ", ".join(sources))
     print(f"Embedding {len(chunks)} chunks with Gemini...")
-    index = HybridIndex.build(chunks, GeminiProvider())
+    index = HybridIndex.build(chunks, embedder, dimensions=EMBEDDING_DIMENSIONS)
     index.save(cfg.index_dir)
-    print(f"Index saved to {cfg.index_dir}")
+    write_manifest(
+        cfg.index_dir,
+        fingerprint=fingerprint,
+        source_ids=sources,
+        segment_count=len(segments),
+        chunk_count=len(chunks),
+        chunking=asdict(cfg.chunking),
+        embedding_model=embedder.models.gemini_embedding,
+        embedding_dimensions=EMBEDDING_DIMENSIONS,
+    )
+    print(f"Persistent index saved to {cfg.index_dir}")
+    print("Fingerprint:", fingerprint[:16])
 
 
 if __name__ == "__main__":
