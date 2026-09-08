@@ -2,18 +2,28 @@ dataset:
   name: CAND-VB2-2026 Verified Knowledge Base
   scope: Tuyển mới đào tạo đại học chính quy CAND đối với công dân đã có bằng tốt nghiệp đại học trở lên
   verified_at: '2026-09-08'
-  policy: Chỉ dùng nguồn cấp A từ Bộ Công an, CSDL văn bản Bộ Công an hoặc website chính thức học viện/trường CAND. Tin báo chí, forum, TikTok, Facebook cá nhân và trung tâm luyện thi không được dùng làm bằng chứng chuẩn.
-  temporal_rule: Thông tin năm 2026 được ưu tiên; văn bản pháp luật phải còn hiệu lực tại ngày xác minh. Nguồn cũ chỉ được dùng khi được văn bản 2026 dẫn chiếu rõ ràng và không có quy định mới thay thế.
+  policy: Chỉ dùng nguồn chính thức cấp A0/A1 làm bằng chứng trả lời. Dự thảo được theo dõi riêng và tuyệt đối không được coi là quy định có hiệu lực.
+  authority_order:
+    - A0_legal_or_central: CSDL văn bản Bộ Công an, Cổng Bộ Công an, Cổng văn bản Chính phủ/Bộ GDĐT
+    - A1_official_school: website chính thức học viện/trường CAND
+  temporal_classes:
+    IN_FORCE: Quy phạm pháp luật đang có hiệu lực hoặc được nguồn trung tâm 2026 viện dẫn như căn cứ hiện hành
+    ANNUAL_2026: Chỉ tiêu, lịch, phương thức, hồ sơ và vận hành riêng kỳ tuyển sinh 2026
+    CURRENT_STATUS: Trạng thái triển khai được xác minh tại một ngày cụ thể
+    WATCH_ONLY_DRAFT: Dự thảo/chưa có hiệu lực; không được dùng làm căn cứ tư vấn
+  temporal_rule: Không suy rộng lịch/chỉ tiêu năm 2026 sang 2027. Văn bản pháp luật được gắn ngày xác minh và rủi ro thay đổi. Khi xuất hiện dự thảo thay thế/sửa đổi, phải hạ mức ổn định tương lai dù văn bản hiện tại vẫn còn hiệu lực.
 
 sources:
   - id: BCA-TS-2026
     authority: Bộ Công an
     title: Thông tin tuyển sinh các học viện, trường Công an nhân dân năm 2026
     url: https://www.bocongan.gov.vn/bai-viet/thong-tin-tuyen-sinh-cac-hoc-vien-truong-cong-an-nhan-dan-nam-2026-1773897621
+    published: '2026-03-19'
     source_type: official_central_admissions
-    year: 2026
+    temporal_class: ANNUAL_2026
     status: current_for_2026_intake
-    evidence_grade: A
+    change_risk: annual_expiry
+    evidence_grade: A0
     verified_at: '2026-09-08'
 
   - id: BCA-EXAM-2026
@@ -22,8 +32,10 @@ sources:
     url: https://bocongan.gov.vn/bai-viet/cong-bo-de-thi-minh-hoa-ky-thi-van-bang-2-cong-an-tren-may-tinh-1781667002
     published: '2026-06-17'
     source_type: official_central_exam
+    temporal_class: ANNUAL_2026
     status: current_for_2026_exam
-    evidence_grade: A
+    change_risk: annual_expiry
+    evidence_grade: A0
     verified_at: '2026-09-08'
 
   - id: BCA-CURRENT-2026-09-08
@@ -32,8 +44,10 @@ sources:
     url: https://www.bocongan.gov.vn/bai-viet/ra-soat-cong-tac-to-chuc-ky-thi-danh-gia-tren-may-tinh-va-ban-ve-de-an-dua-tieng-anh-tro-thanh-ngon-ngu-thu-hai-trong-truong-hoc-1788850887
     published: '2026-09-08'
     source_type: official_current_status
-    status: current
-    evidence_grade: A
+    temporal_class: CURRENT_STATUS
+    status: current_as_of_verified_date
+    change_risk: rapidly_time_sensitive
+    evidence_grade: A0
     verified_at: '2026-09-08'
 
   - id: BCA-LAW-99-2025
@@ -42,8 +56,22 @@ sources:
     url: https://vanban.bocongan.gov.vn/co-so-du-lieu-van-ban/thong-tu-sua-doi-bo-sung-mot-so-dieu-cua-thong-tu-so-50-2021-tt-bca-ngay-11-5-2021-cua-bo-truong-bo-cong-an-quy-dinh-ve-tuyen-sinh-trong-cong-an-nhan-dan-1763108661?tab=attributes
     effective_from: '2026-01-06'
     source_type: official_legal_database
+    temporal_class: IN_FORCE
     status: in_force
-    evidence_grade: A
+    change_risk: elevated_due_to_2026_replacement_draft
+    evidence_grade: A0
+    verified_at: '2026-09-08'
+
+  - id: BCA-LAW-62-2023
+    authority: Bộ Công an
+    title: Thông tư 62/2023/TT-BCA về tiêu chuẩn sức khỏe đặc thù và khám sức khỏe đối với lực lượng CAND
+    url: https://www.bocongan.gov.vn/KND/vb/vbqp/Lists/VBQP/Attachments/2730/Th%C3%B4ng%20t%C6%B0%2062.%202023%20quy%20%C4%91%E1%BB%8Bnh%20ti%C3%AAu%20chu%E1%BA%A9n%20s%E1%BB%A9c%20kh%E1%BB%8Fe%20%C4%91%E1%BA%B7c%20th%C3%B9%20v%C3%A0%20kh%C3%A1m%20s%E1%BB%A9c%20kh%E1%BB%8Fe%20%C4%91%E1%BB%91i%20v%E1%BB%9Bi%20l%E1%BB%B1c%20l%C6%B0%E1%BB%A3ng%20C%C3%B4ng%20an%20nh%C3%A2n%20d%C3%A2n.pdf
+    effective_from: '2024-01-01'
+    source_type: official_legal_text
+    temporal_class: IN_FORCE
+    status: in_force_as_amended_by_131_2025_for_2026_guidance
+    change_risk: no_newer_health_draft_found_as_of_verification
+    evidence_grade: A0
     verified_at: '2026-09-08'
 
   - id: BCA-LAW-131-2025
@@ -52,8 +80,46 @@ sources:
     url: https://vanban.bocongan.gov.vn/co-so-du-lieu-van-ban/thong-tu-sua-doi-bo-sung-mot-so-dieu-cua-thong-tu-so-62-2023-tt-bca-ngay-14-11-2023-cua-bo-truong-bo-cong-an-quy-dinh-ve-tieu-chuan-suc-khoe-dac-thu-va-kham-suc-khoe-doi-voi-luc-luong-cong-an-nhan-dan-1768967121
     effective_from: '2025-12-25'
     source_type: official_legal_database
+    temporal_class: IN_FORCE
     status: in_force
-    evidence_grade: A
+    change_risk: no_newer_health_draft_found_as_of_verification
+    evidence_grade: A0
+    verified_at: '2026-09-08'
+
+  - id: BCA-POLITICAL-48-2023
+    authority: Bộ Công an
+    title: Thông tư 48/2023/TT-BCA về tiêu chuẩn chính trị của cán bộ, chiến sĩ CAND
+    url: https://www.bocongan.gov.vn/bai-viet/thong-tin-tuyen-sinh-cac-hoc-vien-truong-cong-an-nhan-dan-nam-2026-1773897621
+    source_type: official_current_guidance_reference
+    temporal_class: IN_FORCE
+    status: referenced_as_current_by_central_2026_admissions_guidance
+    change_risk: not_independently_assigned_future_stability
+    evidence_grade: A0
+    verified_at: '2026-09-08'
+    note: Registry uses the 2026 central admissions page as public evidence that this political-standard circular is the current authority; it does not expose or infer non-public political screening details.
+
+  - id: BGDDT-LAW-06-2026
+    authority: Bộ Giáo dục và Đào tạo / Cổng Thông tin điện tử Chính phủ
+    title: Thông tư 06/2026/TT-BGDĐT ban hành Quy chế tuyển sinh đại học
+    url: https://vanban.chinhphu.vn/?classid=1&docid=217071&pageid=27160
+    effective_from: '2026-02-15'
+    source_type: official_government_legal_portal
+    temporal_class: IN_FORCE
+    status: effective_for_2026_admissions
+    change_risk: normal_regulatory_change_risk
+    evidence_grade: A0
+    verified_at: '2026-09-08'
+
+  - id: BGDDT-LAW-08-2021
+    authority: Bộ Giáo dục và Đào tạo / Cổng Thông tin điện tử Chính phủ
+    title: Thông tư 08/2021/TT-BGDĐT ban hành Quy chế đào tạo trình độ đại học
+    url: https://vanban.chinhphu.vn/?docid=203159&pageid=27160
+    effective_from: '2021-05-03'
+    source_type: official_government_legal_portal
+    temporal_class: IN_FORCE
+    status: cited_by_2026_CAND_guidance_for_degree_classification
+    change_risk: stable_for_current_use_but_reverify_for_future_cycles
+    evidence_grade: A0
     verified_at: '2026-09-08'
 
   - id: HVANND-VB2-2026
@@ -62,8 +128,10 @@ sources:
     url: https://hvannd.edu.vn/en/tuyen-sinh-tuyen-moi-dao-tao-trinh-do-dai-hoc-nam-2026-tai-hoc-vien-an-ninh-nhan-dan
     published: '2026-04-23'
     source_type: official_school_admissions
+    temporal_class: ANNUAL_2026
     status: current_for_2026_intake
-    evidence_grade: A
+    change_risk: annual_expiry
+    evidence_grade: A1
     verified_at: '2026-09-08'
 
   - id: HVCSND-VB2-2026
@@ -72,8 +140,10 @@ sources:
     url: https://hvcsnd.edu.vn/thong-bao-ke-hoach-tuyen-sinh-dai-hoc-van-bang-2-tuyen-moi-nam-hoc-2026-2027-13815
     published: '2026-03-17'
     source_type: official_school_admissions
+    temporal_class: ANNUAL_2026
     status: current_for_2026_intake
-    evidence_grade: A
+    change_risk: annual_expiry
+    evidence_grade: A1
     verified_at: '2026-09-08'
 
   - id: DHANND-VB2-2026
@@ -81,8 +151,10 @@ sources:
     title: Thông báo tuyển sinh tuyển mới đào tạo trình độ đại học chính quy năm 2026
     url: https://dhannd.bocongan.gov.vn/Thong-tin-tuyen-sinh/thong-bao-tuyen-sinh-tuyen-moi-dao-tao-trinh-do-dai-hoc-chinh-quy-nam-2026-a-4201
     source_type: official_school_admissions
+    temporal_class: ANNUAL_2026
     status: current_for_2026_intake
-    evidence_grade: A
+    change_risk: annual_expiry
+    evidence_grade: A1
     verified_at: '2026-09-08'
 
   - id: DHCSND-VB2-2026
@@ -91,8 +163,10 @@ sources:
     url: https://dhcsnd.edu.vn/article/thong-bao-tuyen-sinh-dao-tao-trinh-do-dai-hoc-chinh-quy-tuyen-moi-doi-voi-cong-dan-da-co-bang-tot-nghiep-trinh-do-dai-hoc-tro-len-nam-2026
     published: '2026-04-10'
     source_type: official_school_admissions
+    temporal_class: ANNUAL_2026
     status: current_for_2026_intake
-    evidence_grade: A
+    change_risk: annual_expiry
+    evidence_grade: A1
     verified_at: '2026-09-08'
 
   - id: T07-VB2-2026
@@ -101,8 +175,10 @@ sources:
     url: https://hvktcnan.bocongan.gov.vn/TrangChu/tin-tuc/1966-thong-tin-tuyen-sinh-dai-hoc-van-bang-2-chinh-quy-tuyen-moi-doi-voi-nguoi-da-co-bang-tot-nghiep-trinh-do-dai-hoc-tro-len-nam-2026.html
     published: '2026-05-05'
     source_type: official_school_admissions
+    temporal_class: ANNUAL_2026
     status: current_for_2026_intake
-    evidence_grade: A
+    change_risk: annual_expiry
+    evidence_grade: A1
     verified_at: '2026-09-08'
 
   - id: PCCC-VB2-2026
@@ -111,6 +187,23 @@ sources:
     url: https://hocvienpccc.bocongan.gov.vn/blog/thong-bao-tuyen-sinh-tuyen-moi-dao-tao-trinh-do-dai-hoc-chinh-quy-cand-doi-voi-cong-dan-da-co-bang-tot-nghiep-trinh-do-dai-hoc-tro-len-nam-2026_7430
     published: '2026-03-24'
     source_type: official_school_admissions
+    temporal_class: ANNUAL_2026
     status: current_for_2026_intake
-    evidence_grade: A
+    change_risk: annual_expiry
+    evidence_grade: A1
     verified_at: '2026-09-08'
+
+watch_only_sources:
+  - id: BCA-DRAFT-ADMISSIONS-2026-08
+    authority: Bộ Công an
+    title: Hồ sơ dự thảo Thông tư quy định về tuyển sinh trong Công an nhân dân
+    url: https://bocongan.gov.vn/chinh-sach-phap-luat/lay-y-kien-du-thao/ho-so-du-thao-thong-tu-quy-dinh-ve-tuyen-sinh-trong-cong-an-nhan-dan-1786676383?type=dang-lay-y-kien
+    consultation_start: '2026-08-13'
+    consultation_end: '2026-08-23'
+    source_type: official_draft
+    temporal_class: WATCH_ONLY_DRAFT
+    status: draft_not_in_force
+    change_risk: direct_signal_current_admissions_regulation_may_change
+    evidence_grade: A0_WATCH
+    verified_at: '2026-09-08'
+    retrieval_policy: never_index_as_answer_evidence
