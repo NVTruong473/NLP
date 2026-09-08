@@ -1,0 +1,96 @@
+dataset:
+  name: CAND-VB2-2026 Verified Knowledge Base
+  scope: Tuyển mới đào tạo đại học chính quy CAND đối với công dân đã có bằng tốt nghiệp đại học trở lên
+  verified_at: '2026-09-08'
+  policy: Chỉ dùng nguồn cấp A từ Bộ Công an, CSDL văn bản Bộ Công an hoặc website chính thức học viện/trường CAND. Tin báo chí, forum, TikTok, Facebook cá nhân và trung tâm luyện thi không được dùng làm bằng chứng chuẩn.
+  temporal_rule: Thông tin năm 2026 được ưu tiên; văn bản pháp luật phải còn hiệu lực tại ngày xác minh. Nguồn cũ chỉ được dùng khi được văn bản 2026 dẫn chiếu rõ ràng và không có quy định mới thay thế.
+
+sources:
+  - id: BCA-TS-2026
+    authority: Bộ Công an
+    title: Thông tin tuyển sinh các học viện, trường Công an nhân dân năm 2026
+    url: https://www.bocongan.gov.vn/bai-viet/thong-tin-tuyen-sinh-cac-hoc-vien-truong-cong-an-nhan-dan-nam-2026-1773897621
+    source_type: official_central_admissions
+    year: 2026
+    status: current_for_2026_intake
+    evidence_grade: A
+    verified_at: '2026-09-08'
+
+  - id: BCA-EXAM-2026
+    authority: Bộ Công an
+    title: Công bố đề thi minh họa Kỳ thi văn bằng 2 Công an trên máy tính
+    url: https://bocongan.gov.vn/bai-viet/cong-bo-de-thi-minh-hoa-ky-thi-van-bang-2-cong-an-tren-may-tinh-1781667002
+    published: '2026-06-17'
+    source_type: official_central_exam
+    status: current_for_2026_exam
+    evidence_grade: A
+    verified_at: '2026-09-08'
+
+  - id: BCA-CURRENT-2026-09-08
+    authority: Bộ Công an
+    title: Rà soát công tác tổ chức Kỳ thi đánh giá trên máy tính
+    url: https://www.bocongan.gov.vn/bai-viet/ra-soat-cong-tac-to-chuc-ky-thi-danh-gia-tren-may-tinh-va-ban-ve-de-an-dua-tieng-anh-tro-thanh-ngon-ngu-thu-hai-trong-truong-hoc-1788850887
+    published: '2026-09-08'
+    source_type: official_current_status
+    status: current
+    evidence_grade: A
+    verified_at: '2026-09-08'
+
+  - id: BCA-LAW-99-2025
+    authority: Cơ sở dữ liệu văn bản Bộ Công an
+    title: Thông tư 99/2025/TT-BCA sửa đổi Thông tư 50/2021/TT-BCA về tuyển sinh trong CAND
+    url: https://vanban.bocongan.gov.vn/co-so-du-lieu-van-ban/thong-tu-sua-doi-bo-sung-mot-so-dieu-cua-thong-tu-so-50-2021-tt-bca-ngay-11-5-2021-cua-bo-truong-bo-cong-an-quy-dinh-ve-tuyen-sinh-trong-cong-an-nhan-dan-1763108661?tab=attributes
+    effective_from: '2026-01-06'
+    source_type: official_legal_database
+    status: in_force
+    evidence_grade: A
+    verified_at: '2026-09-08'
+
+  - id: BCA-LAW-131-2025
+    authority: Cơ sở dữ liệu văn bản Bộ Công an
+    title: Thông tư 131/2025/TT-BCA sửa đổi tiêu chuẩn sức khỏe đặc thù CAND
+    url: https://vanban.bocongan.gov.vn/co-so-du-lieu-van-ban/thong-tu-sua-doi-bo-sung-mot-so-dieu-cua-thong-tu-so-62-2023-tt-bca-ngay-14-11-2023-cua-bo-truong-bo-cong-an-quy-dinh-ve-tieu-chuan-suc-khoe-dac-thu-va-kham-suc-khoe-doi-voi-luc-luong-cong-an-nhan-dan-1768967121
+    effective_from: '2025-12-25'
+    source_type: official_legal_database
+    status: in_force
+    evidence_grade: A
+    verified_at: '2026-09-08'
+
+  - id: T07-VB2-2026
+    authority: Học viện Kỹ thuật và Công nghệ an ninh - Bộ Công an
+    title: Thông tin tuyển sinh đại học văn bằng 2 chính quy tuyển mới năm 2026
+    url: https://hvktcnan.bocongan.gov.vn/TrangChu/tin-tuc/1966-thong-tin-tuyen-sinh-dai-hoc-van-bang-2-chinh-quy-tuyen-moi-doi-voi-nguoi-da-co-bang-tot-nghiep-trinh-do-dai-hoc-tro-len-nam-2026.html
+    published: '2026-05-05'
+    source_type: official_school_admissions
+    status: current_for_2026_intake
+    evidence_grade: A
+    verified_at: '2026-09-08'
+
+  - id: HVCSND-VB2-2026
+    authority: Học viện Cảnh sát nhân dân
+    title: Kế hoạch tuyển sinh đại học văn bằng 2 tuyển mới năm học 2026-2027
+    url: https://hvcsnd.edu.vn/thong-bao-ke-hoach-tuyen-sinh-dai-hoc-van-bang-2-tuyen-moi-nam-hoc-2026-2027-13815
+    published: '2026-03-17'
+    source_type: official_school_admissions
+    status: current_for_2026_intake
+    evidence_grade: A
+    verified_at: '2026-09-08'
+
+  - id: DHANND-VB2-2026
+    authority: Trường Đại học An ninh nhân dân - Bộ Công an
+    title: Thông báo tuyển sinh tuyển mới đào tạo trình độ đại học chính quy năm 2026
+    url: https://dhannd.bocongan.gov.vn/Thong-tin-tuyen-sinh/thong-bao-tuyen-sinh-tuyen-moi-dao-tao-trinh-do-dai-hoc-chinh-quy-nam-2026-a-4201
+    source_type: official_school_admissions
+    status: current_for_2026_intake
+    evidence_grade: A
+    verified_at: '2026-09-08'
+
+  - id: PCCC-VB2-2026
+    authority: Học viện Phòng cháy chữa cháy và cứu nạn cứu hộ - Bộ Công an
+    title: Tuyển sinh tuyển mới đại học chính quy CAND đối với công dân đã có bằng đại học trở lên năm 2026
+    url: https://hocvienpccc.bocongan.gov.vn/blog/thong-bao-tuyen-sinh-tuyen-moi-dao-tao-trinh-do-dai-hoc-chinh-quy-cand-doi-voi-cong-dan-da-co-bang-tot-nghiep-trinh-do-dai-hoc-tro-len-nam-2026_7430
+    published: '2026-03-24'
+    source_type: official_school_admissions
+    status: current_for_2026_intake
+    evidence_grade: A
+    verified_at: '2026-09-08'
