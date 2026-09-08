@@ -20,7 +20,7 @@ VietRAG is built around that stricter requirement:
 - retrieval and refusal behavior are evaluated separately;
 - API keys and private documents are never committed.
 
-The default reproducible demo uses **public TDTU admissions and undergraduate-regulation pages**. The engine itself is domain-agnostic: replace those sources with internal policies, procedures, manuals, legal documents, product knowledge, finance documents, or another specialized corpus.
+The default reproducible demo uses **public TDTU admissions and undergraduate-regulation pages**. The engine itself is domain-agnostic: replace those sources with policies, procedures, manuals, legal documents, product knowledge, finance documents, or another specialized corpus. **When using free API tiers, use public or otherwise non-sensitive documents only; see the privacy boundary below.**
 
 ---
 
@@ -166,7 +166,7 @@ Gradio returns a temporary share link in Colab.
 
 # Use your own documents
 
-Upload files into:
+Upload **public or otherwise non-sensitive** files into:
 
 ```text
 data/uploads/
@@ -189,7 +189,7 @@ Supported formats:
 - `.html` / `.htm`
 - explicit HTTP/HTTPS URLs in a YAML source list
 
-`data/uploads/` is Git-ignored so local/private documents are not accidentally committed.
+`data/uploads/` is Git-ignored so local files are not accidentally committed. **Git privacy is not API privacy:** document text is still sent to Gemini for embeddings/generation and may be sent to OpenRouter for reranking/fallback generation. On free tiers, do not use confidential, personal, regulated, or proprietary internal documents.
 
 > Scanned PDFs that contain only images are not silently OCR'd in v1. A robust product should measure OCR quality separately rather than pretending empty extraction is valid text.
 
@@ -348,6 +348,10 @@ This project is designed to be usable without a paid inference server:
 4. FAISS/BM25/document extraction run locally in Colab.
 5. Index artifacts are persisted locally for the session so documents are not re-embedded for every question.
 
+### Free-tier privacy boundary
+
+Zero-cost API access is appropriate for this project's public demo and other non-sensitive experimentation, **not for confidential internal knowledge**. Google states that content on the Gemini API free tier may be used to improve its products, and some OpenRouter free endpoints have provider-specific logging/data-use terms. Review the current provider terms before changing this boundary. If confidentiality is a requirement, free-tier-only is the wrong deployment constraint.
+
 Free tiers and model availability can change. Treat model names as configuration, not permanent assumptions.
 
 ---
@@ -366,7 +370,8 @@ Confirm that:
 - `providers.env` is not tracked;
 - private documents are not tracked;
 - generated indexes are not tracked;
-- screenshots/logs do not contain keys.
+- screenshots/logs do not contain keys;
+- the corpus is safe to send to the configured Gemini/OpenRouter API tiers.
 
 If an API key ever appears in a public screenshot, chat, commit or log, rotate/revoke it immediately.
 
@@ -395,6 +400,7 @@ The project does not claim that an architecture is superior until it is tested o
 - HTML extraction is generic and may include boilerplate on unusual sites.
 - OCR and table-aware multimodal parsing are intentionally deferred until they can be evaluated properly.
 - Free API quotas and free model availability can change over time.
+- The free-tier configuration is not suitable for confidential internal data because external APIs receive document/query content and their data-use terms may permit logging or product improvement.
 
 ---
 
