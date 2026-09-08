@@ -6,33 +6,37 @@ official_url: https://hvktcnan.bocongan.gov.vn/TrangChu/tin-tuc/1966-thong-tin-t
 published: '2026-05-05'
 verified_at: '2026-09-08'
 status: current_for_2026_intake
+evidence_grade: A1
+temporal_class: ANNUAL_2026
+change_risk: annual_expiry
 scope: VB2CA tuyển mới tại T07, đặc biệt liên quan nền tảng CNTT
 ---
 # Học viện Kỹ thuật và Công nghệ an ninh - VB2CA 2026
 
-Học viện Kỹ thuật và Công nghệ an ninh là lựa chọn toàn quốc có điều kiện văn bằng 1 bao gồm rõ lĩnh vực Máy tính và công nghệ thông tin mã 748. Danh mục còn có Công nghệ kỹ thuật 751, Kỹ thuật 752, Pháp luật 738, Khoa học sự sống 742, Kinh doanh và quản lý 734, Kiến trúc và xây dựng 758, một số lĩnh vực sức khỏe/y-dược 772 và Dịch vụ xã hội 776 theo thông báo trường.
+Học viện tuyển VB2CA trên phạm vi toàn quốc. Danh mục văn bằng đại học thứ nhất được chấp nhận bao gồm rõ mã 748 - Máy tính và công nghệ thông tin; ngoài ra còn có các lĩnh vực 751, 752, 738, 742, 734, 758, một số lĩnh vực sức khỏe/y-dược thuộc 772 và Dịch vụ xã hội 776 theo thông báo 2026.
 
-## Chỉ tiêu
+# Chỉ tiêu
 
-Năm 2026, Học viện công bố 50 chỉ tiêu VB2 tuyển mới. Phương thức 1 có 24 chỉ tiêu, gồm 22 nam và 2 nữ. Phương thức 2 có 26 chỉ tiêu, gồm 23 nam và 3 nữ.
+Học viện công bố 50 chỉ tiêu: Phương thức 1 có 24 chỉ tiêu (22 nam, 2 nữ), Phương thức 2 có 26 chỉ tiêu (23 nam, 3 nữ).
 
-## Phương thức
+# Lợi thế và giới hạn đối với người có bằng CNTT
 
-- Phương thức 1: xét tuyển thẳng theo các nhóm điều kiện của Bộ Công an.
-- Phương thức 2: thi Kỳ thi đánh giá VB2CA của Bộ Công an.
+Bằng thuộc lĩnh vực 748 nằm trực tiếp trong danh mục được dự tuyển. Một số nhánh Phương thức 1 cũng ưu tiên nhóm 748/751/752 hoặc nhóm CNTT 74802 kết hợp chứng chỉ ngoại ngữ theo ngưỡng của thông báo 2026.
 
-Đối với Phương thức 2, Bộ Công an công bố Học viện sử dụng mã CA1 hoặc CA2. CA1 gắn với Toán cao cấp; CA2 gắn với Kinh tế học vĩ mô, cùng phần nghị luận bắt buộc.
+Đối với ngoại lệ học lực dành cho nhóm kỹ thuật/khoa học tự nhiên/khoa học máy tính/CNTT, bằng từ loại Trung bình trở lên chỉ có thể được xem xét khi đồng thời thỏa điều kiện học thuật bổ sung được công bố; không được hiểu là mọi bằng Trung bình đều đủ điều kiện.
 
-## Người có bằng CNTT
+# Phương thức 2 và địa điểm thi
 
-Người có bằng thuộc mã lĩnh vực 748 nằm trực tiếp trong danh mục được dự tuyển tại Học viện. Nếu bằng loại Giỏi/Xuất sắc thuộc các lĩnh vực 748, 751, 752, thí sinh có thể thuộc nhóm chuyên môn xét tuyển thẳng Phương thức 1 theo điều kiện 2026. Nếu bằng loại Khá thuộc nhóm ngành CNTT mã 74802, một nhánh Phương thức 1 sử dụng điều kiện chứng chỉ ngoại ngữ quốc tế tương đương IELTS Academic từ 6.5 trở lên; trường hợp con đẻ cán bộ Công an áp dụng ngưỡng thấp hơn theo thông báo.
+T07 sử dụng mã CA1 hoặc CA2 trong Kỳ thi đánh giá VB2CA trên máy tính, thời gian 150 phút. CA1 gắn với Toán cao cấp; CA2 gắn với Kinh tế học vĩ mô, cùng phần nghị luận bắt buộc theo cấu trúc đề trung tâm.
 
-Nếu dùng Phương thức 2 và thuộc danh mục kỹ thuật/CNTT được ưu tiên về yêu cầu xếp loại, bằng từ loại Trung bình trở lên vẫn có thể được xem xét khi đồng thời đạt điều kiện về điểm các học phần chuyên môn/môn tốt nghiệp hoặc khóa luận, đồ án, báo cáo thực tập như quy định. Không được hiểu rằng mọi bằng Trung bình đều tự động đủ điều kiện.
+Thông báo trường dự kiến kỳ thi trong ngày 19-20/09/2026 tại cơ sở của Học viện ở Thuận Thành, Bắc Ninh theo bố trí kỳ thi.
 
-## Sơ tuyển và hồ sơ
+# Sơ tuyển và hồ sơ
 
-Công dân thường trú đăng ký tại Công an cấp xã nơi thường trú; chiến sĩ nghĩa vụ đăng ký tại đơn vị. Hồ sơ bao gồm các giấy tờ nhân thân, bằng THPT, bằng đại học và bảng điểm, chứng chỉ/bằng sau đại học và ngoại ngữ nếu có, cùng giấy tờ ưu tiên theo trường hợp.
+Công dân thường trú đăng ký sơ tuyển tại Công an cấp xã nơi thường trú; chiến sĩ nghĩa vụ đăng ký tại đơn vị. Hồ sơ gồm nhóm giấy tờ nhân thân, học vấn, bằng đại học/bảng điểm, chứng chỉ và tài liệu ưu tiên nếu có theo trường hợp.
 
-## Thời gian đào tạo và công tác
+Kế hoạch 2026 yêu cầu hồ sơ được chuyển về cơ sở tiếp nhận của Học viện theo mốc trước 17:00 ngày 20/08/2026. Đây là mốc của kỳ 2026, không phải quy tắc vĩnh viễn.
 
-Thông báo Học viện cho biết sau khi trúng tuyển, học viên trải qua giai đoạn huấn luyện đầu khóa theo bố trí của Bộ Công an trước khi học chương trình tại Học viện; chương trình VB2 chuyên môn khoảng hai năm theo kế hoạch công bố. Việc phân công công tác và cấp bậc sau tốt nghiệp thực hiện theo quy định, kế hoạch của Bộ Công an tại thời điểm tốt nghiệp, không nên được RAG biến thành cam kết về một vị trí công tác cụ thể.
+# Đào tạo và sau tốt nghiệp
+
+Thông báo 2026 mô tả thời gian đào tạo chuyên môn khoảng hai năm, kèm giai đoạn huấn luyện đầu khóa khoảng bốn tháng theo kế hoạch đào tạo CAND. Việc xét cấp bậc và phân công công tác sau tốt nghiệp thực hiện theo quy định/nhu cầu tại thời điểm tốt nghiệp; chatbot không được cam kết một vị trí cụ thể.
