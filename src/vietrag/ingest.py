@@ -15,7 +15,7 @@ from .chunking import Segment, normalize_whitespace
 
 
 DEFAULT_HEADERS = {
-    "User-Agent": "VietRAG/1.1 (+https://github.com/NVTruong473/NLP)"
+    "User-Agent": "VietRAG/1.2 (+https://github.com/NVTruong473/NLP)"
 }
 
 
@@ -30,22 +30,80 @@ def _frontmatter(text: str) -> tuple[dict, str]:
     return metadata if isinstance(metadata, dict) else {}, match.group(2)
 
 
+def _segment_kwargs(metadata: dict, path: Path) -> dict:
+    return {
+        "source": str(metadata.get("source_id") or path.stem),
+        "title": str(metadata.get("title") or path.stem),
+        "url": metadata.get("official_url") or metadata.get("url"),
+        "authority": metadata.get("authority"),
+        "published": str(metadata.get("published")) if metadata.get("published") is not None else None,
+        "verified_at": str(metadata.get("verified_at")) if metadata.get("verified_at") is not None else None,
+        "status": metadata.get("status"),
+        "scope": metadata.get("scope"),
+    }
+
+
 def _segment_from_text(text: str, path: Path) -> Segment | None:
     metadata, body = _frontmatter(text)
     body = normalize_whitespace(body)
     if not body:
         return None
-    return Segment(
-        text=body,
-        source=str(metadata.get("source_id") or path.stem),
-        title=str(metadata.get("title") or path.stem),
-        url=metadata.get("official_url") or metadata.get("url"),
-        authority=metadata.get("authority"),
-        published=str(metadata.get("published")) if metadata.get("published") is not None else None,
-        verified_at=str(metadata.get("verified_at")) if metadata.get("verified_at") is not None else None,
-        status=metadata.get("status"),
-        scope=metadata.get("scope"),
-    )
+    return Segment(text=body, **_segment_kwargs(metadata, path))
+
+
+def load_markdown(path: str | Path) -> list[Segment]:
+    """Split curated Markdown on heading boundaries and preserve heading paths.
+
+    Inspired by LightRAG's heading-aware/paragraph-oriented processing, but kept
+    deterministic: no LLM is used to decide chunk boundaries. This is safer for
+    legal/admissions evidence and costs no API quota.
+    """
+    path = Path(path)
+    raw = path.read_text(encoding="utf-8", errors="ignore")
+    metadata, body = _frontmatter(raw)
+    kwargs = _segment_kwargs(metadata, path)
+
+    heading_stack: list[str] = []
+    buffer: list[str] = []
+    output: list[Segment] = []
+
+    def flush() -> None:
+        nonlocal buffer
+        content = normalize_whitespace("\n".join(buffer))
+        if not content:
+            buffer = []
+            return
+        section = " > ".join(heading_stack) if heading_stack else None
+        # Make section semantics visible to dense/BM25 retrieval while keeping
+        # the same section path as explicit metadata for citations/debugging.
+        text = f"Mục: {section}\n{content}" if section else content
+        output.append(Segment(text=text, section=section, **kwargs))
+        buffer = []
+
+    for line in body.splitlines():
+        match = re.match(r"^(#{1,6})\s+(.+?)\s*$", line)
+        if not match:
+            buffer.append(line)
+            continue
+
+        flush()
+        level = len(match.group(1))
+        heading = normalize_whitespace(match.group(2))
+        heading_stack[:] = heading_stack[: level - 1]
+        while len(heading_stack) < level - 1:
+            heading_stack.append("")
+        if len(heading_stack) == level - 1:
+            heading_stack.append(heading)
+        else:
+            heading_stack[level - 1] = heading
+        heading_stack[:] = [h for h in heading_stack if h]
+
+    flush()
+
+    if output:
+        return output
+    segment = _segment_from_text(raw, path)
+    return [segment] if segment else []
 
 
 def load_pdf(path: str | Path) -> list[Segment]:
@@ -113,7 +171,9 @@ def load_path(path: str | Path) -> list[Segment]:
         return load_pdf(path)
     if suffix == ".docx":
         return load_docx(path)
-    if suffix in {".txt", ".md", ".csv", ".json"}:
+    if suffix == ".md":
+        return load_markdown(path)
+    if suffix in {".txt", ".csv", ".json"}:
         return load_text(path)
     if suffix in {".html", ".htm"}:
         return load_html_text(path.read_text(encoding="utf-8", errors="ignore"), source=path.stem)
