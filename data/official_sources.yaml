@@ -1,0 +1,58 @@
+# Optional live refresh list. The default Colab build uses data/corpus snapshots for reproducibility.
+# Every URL below is an official Ministry of Public Security or CAND school source.
+sources:
+  - id: BCA-TS-2026-LIVE
+    title: Thông tin tuyển sinh CAND 2026 - VB2CA
+    authority: Bộ Công an
+    url: https://www.bocongan.gov.vn/bai-viet/thong-tin-tuyen-sinh-cac-hoc-vien-truong-cong-an-nhan-dan-nam-2026-1773897621
+    verified_at: '2026-09-08'
+    status: current_for_2026_intake
+    scope: VB2CA tuyển mới 2026
+
+  - id: BCA-EXAM-2026-LIVE
+    title: Đề minh họa và cấu trúc kỳ thi VB2CA trên máy tính 2026
+    authority: Bộ Công an
+    url: https://bocongan.gov.vn/bai-viet/cong-bo-de-thi-minh-hoa-ky-thi-van-bang-2-cong-an-tren-may-tinh-1781667002
+    verified_at: '2026-09-08'
+    status: current_for_2026_exam
+    scope: Kỳ thi VB2CA 2026
+
+  - id: BCA-CURRENT-2026-09-08-LIVE
+    title: Rà soát tổ chức kỳ thi đánh giá trên máy tính ngày 08/09/2026
+    authority: Bộ Công an
+    url: https://www.bocongan.gov.vn/bai-viet/ra-soat-cong-tac-to-chuc-ky-thi-danh-gia-tren-may-tinh-va-ban-ve-de-an-dua-tieng-anh-tro-thanh-ngon-ngu-thu-hai-trong-truong-hoc-1788850887
+    verified_at: '2026-09-08'
+    status: current
+    scope: Trạng thái triển khai kỳ thi VB2CA 2026
+
+  - id: T07-VB2-2026-LIVE
+    title: Tuyển sinh VB2 chính quy tuyển mới T07 năm 2026
+    authority: Học viện Kỹ thuật và Công nghệ an ninh
+    url: https://hvktcnan.bocongan.gov.vn/TrangChu/tin-tuc/1966-thong-tin-tuyen-sinh-dai-hoc-van-bang-2-chinh-quy-tuyen-moi-doi-voi-nguoi-da-co-bang-tot-nghiep-trinh-do-dai-hoc-tro-len-nam-2026.html
+    verified_at: '2026-09-08'
+    status: current_for_2026_intake
+    scope: VB2CA tuyển mới tại T07
+
+  - id: HVCSND-VB2-2026-LIVE
+    title: Kế hoạch tuyển sinh VB2 tuyển mới Học viện CSND 2026-2027
+    authority: Học viện Cảnh sát nhân dân
+    url: https://hvcsnd.edu.vn/thong-bao-ke-hoach-tuyen-sinh-dai-hoc-van-bang-2-tuyen-moi-nam-hoc-2026-2027-13815
+    verified_at: '2026-09-08'
+    status: current_for_2026_intake
+    scope: VB2CA tuyển mới tại Học viện CSND
+
+  - id: DHANND-VB2-2026-LIVE
+    title: Tuyển sinh tuyển mới đại học chính quy Trường Đại học ANND 2026
+    authority: Trường Đại học An ninh nhân dân
+    url: https://dhannd.bocongan.gov.vn/Thong-tin-tuyen-sinh/thong-bao-tuyen-sinh-tuyen-moi-dao-tao-trinh-do-dai-hoc-chinh-quy-nam-2026-a-4201
+    verified_at: '2026-09-08'
+    status: current_for_2026_intake
+    scope: VB2CA tuyển mới phía Nam
+
+  - id: PCCC-VB2-2026-LIVE
+    title: Tuyển sinh VB2CA PCCC năm 2026
+    authority: Học viện Phòng cháy chữa cháy và cứu nạn cứu hộ
+    url: https://hocvienpccc.bocongan.gov.vn/blog/thong-bao-tuyen-sinh-tuyen-moi-dao-tao-trinh-do-dai-hoc-chinh-quy-cand-doi-voi-cong-dan-da-co-bang-tot-nghiep-trinh-do-dai-hoc-tro-len-nam-2026_7430
+    verified_at: '2026-09-08'
+    status: current_for_2026_intake
+    scope: VB2CA tuyển mới PCCC
