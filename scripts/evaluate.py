@@ -16,6 +16,16 @@ def safe_div(a: int, b: int) -> float | None:
     return a / b if b else None
 
 
+def unique_in_order(values: list[str]) -> list[str]:
+    seen: set[str] = set()
+    out: list[str] = []
+    for value in values:
+        if value not in seen:
+            seen.add(value)
+            out.append(value)
+    return out
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default="configs/default.yaml")
@@ -49,9 +59,10 @@ def main():
             dense_weight=cfg.retrieval.dense_weight,
             bm25_weight=cfg.retrieval.bm25_weight,
             reranker=openrouter,
-            rerank_top_k=args.k,
+            rerank_top_k=max(args.k, cfg.retrieval.rerank_top_k),
         )
-        retrieved_sources = [r.chunk.source for r in results]
+        # Evaluate document/source retrieval, not repeated chunks from the same source.
+        retrieved_sources = unique_in_order([r.chunk.source for r in results])
         relevant = set(row.get("relevant_sources", []))
         if relevant:
             metrics.append(retrieval_metrics(retrieved_sources, relevant, k=args.k))
@@ -74,6 +85,8 @@ def main():
         if in_acceptance is not None and ood_rejection is not None
         else None
     )
+    summary["evaluated_questions"] = len(rows)
+    summary["retrieval_questions"] = len(metrics)
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 
 
