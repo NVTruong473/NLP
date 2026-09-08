@@ -17,6 +17,7 @@ class RetrievalConfig:
     rrf_k: int = 60
     dense_weight: float = 1.0
     bm25_weight: float = 0.8
+    max_chunks_per_source: int = 3
     ood_dense_threshold: float = 0.28
 
 
