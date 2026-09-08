@@ -1,31 +1,40 @@
 {"question":"Tôi có bằng đại học Công nghệ thông tin thì có được dự tuyển VB2 Công an năm 2026 không?","relevant_sources":["BCA-TS-2026"]}
 {"question":"Bằng CNTT loại Trung bình có trường hợp nào vẫn đủ điều kiện học lực để thi VB2CA không?","relevant_sources":["BCA-TS-2026"]}
-{"question":"Bằng đại học không ghi xếp loại thì quy đổi GPA thang 4 như thế nào?","relevant_sources":["BCA-TS-2026"]}
+{"question":"Bằng đại học không ghi xếp loại thì quy đổi GPA thang 4 như thế nào?","relevant_sources":["BCA-TS-2026","BGDDT-LAW-06-2026"]}
 {"question":"Tôi 31 tuổi vào ngày thi 20/9/2026 thì có đủ điều kiện tuổi không?","relevant_sources":["BCA-TS-2026"]}
-{"question":"Ngành An toàn thông tin của Học viện An ninh nhân dân yêu cầu văn bằng 1 thuộc lĩnh vực nào?","relevant_sources":["BCA-TS-2026"]}
-{"question":"Người có bằng CNTT nên xem xét những trường hoặc nhóm ngành VB2CA nào?","relevant_sources":["BCA-TS-2026","T07-VB2-2026"]}
+{"question":"Ngành An toàn thông tin của Học viện An ninh nhân dân yêu cầu văn bằng 1 thuộc lĩnh vực nào?","relevant_sources":["HVANND-VB2-2026","BCA-TS-2026"]}
+{"question":"Học viện An ninh nhân dân có bao nhiêu chỉ tiêu VB2 An toàn thông tin năm 2026?","relevant_sources":["HVANND-VB2-2026"]}
+{"question":"An toàn thông tin Học viện ANND thi CA1 hay được chọn CA1 đến CA4?","relevant_sources":["HVANND-VB2-2026","BCA-EXAM-2026"]}
+{"question":"Người có bằng CNTT nên xem xét những trường hoặc nhóm ngành VB2CA nào?","relevant_sources":["BCA-TS-2026","HVANND-VB2-2026","T07-VB2-2026"]}
 {"question":"Học viện Kỹ thuật và Công nghệ an ninh có nhận người tốt nghiệp mã lĩnh vực 748 không?","relevant_sources":["T07-VB2-2026"]}
 {"question":"T07 được giao bao nhiêu chỉ tiêu VB2 tuyển mới năm 2026 và chia theo phương thức thế nào?","relevant_sources":["T07-VB2-2026"]}
+{"question":"T07 thi Phương thức 2 bằng CA1 hay CA2?","relevant_sources":["T07-VB2-2026"]}
 {"question":"Học viện Cảnh sát nhân dân có bao nhiêu chỉ tiêu VB2 tuyển mới 2026-2027?","relevant_sources":["HVCSND-VB2-2026"]}
-{"question":"Tôi phải đăng ký sơ tuyển VB2CA ở đâu nếu là công dân thường trú?","relevant_sources":["PCCC-VB2-2026"]}
-{"question":"Khi đi sơ tuyển cần mang những giấy tờ cơ bản nào?","relevant_sources":["PCCC-VB2-2026"]}
+{"question":"Tôi tốt nghiệp CNTT, nam cao 1m62 thì ngưỡng chiều cao công khai của Học viện CSND nói gì?","relevant_sources":["HVCSND-VB2-2026"]}
+{"question":"BMI 31 có nằm trong khoảng sức khỏe được công bố không?","relevant_sources":["BCA-LAW-131-2025","HVCSND-VB2-2026"]}
+{"question":"Trường Đại học An ninh nhân dân có giới hạn ngành bằng 1 khi thi Phương thức 2 Nghiệp vụ An ninh không?","relevant_sources":["DHANND-VB2-2026"]}
+{"question":"Trường Đại học Cảnh sát nhân dân phía Nam có bao nhiêu chỉ tiêu VB2 năm 2026?","relevant_sources":["DHCSND-VB2-2026"]}
+{"question":"Trường Đại học PCCC có nhận bằng CNTT mã 748 không?","relevant_sources":["PCCC-VB2-2026"]}
+{"question":"Tôi phải đăng ký sơ tuyển VB2CA ở đâu nếu là công dân thường trú?","relevant_sources":["PCCC-VB2-2026","T07-VB2-2026"]}
+{"question":"Khi đi sơ tuyển cần mang những giấy tờ cơ bản nào?","relevant_sources":["PCCC-VB2-2026","DHANND-VB2-2026"]}
 {"question":"Hạn đăng ký ban đầu VB2CA năm 2026 là ngày nào?","relevant_sources":["PCCC-VB2-2026"]}
 {"question":"Hôm nay 8/9/2026 tôi chưa từng sơ tuyển thì còn đăng ký đợt 2026 theo lịch thông thường được không?","relevant_sources":["BCA-CURRENT-2026-09-08","PCCC-VB2-2026"]}
 {"question":"Đến 8/9/2026 kỳ thi VB2CA 2026 còn đang được Bộ Công an triển khai không?","relevant_sources":["BCA-CURRENT-2026-09-08"]}
 {"question":"Năm 2026 có bao nhiêu chỉ tiêu VB2 tuyển mới toàn hệ thống CAND?","relevant_sources":["BCA-CURRENT-2026-09-08"]}
 {"question":"Có bao nhiêu người đăng ký Phương thức 2 VB2CA theo thông tin Bộ Công an ngày 8/9/2026?","relevant_sources":["BCA-CURRENT-2026-09-08"]}
-{"question":"Kỳ thi VB2CA năm 2026 thi ngày nào và trong bao lâu?","relevant_sources":["BCA-EXAM-2026"]}
+{"question":"Kỳ thi VB2CA năm 2026 thi ngày nào và trong bao lâu?","relevant_sources":["BCA-EXAM-2026","BCA-CURRENT-2026-09-08"]}
 {"question":"Bài thi VB2CA trên máy tính gồm mấy phần và thang điểm thế nào?","relevant_sources":["BCA-EXAM-2026"]}
 {"question":"CA1 của kỳ thi VB2CA 2026 là môn gì?","relevant_sources":["BCA-EXAM-2026"]}
-{"question":"Ngành An toàn thông tin thi CA1 hay được chọn CA1 đến CA4?","relevant_sources":["BCA-EXAM-2026"]}
 {"question":"Công thức tính điểm xét tuyển Phương thức 2 VB2CA là gì?","relevant_sources":["BCA-EXAM-2026"]}
 {"question":"Thông tư 99/2025/TT-BCA còn hiệu lực vào tháng 9/2026 không?","relevant_sources":["BCA-LAW-99-2025"]}
+{"question":"Có thể chắc chắn quy định tuyển sinh 50/2021 và 99/2025 sẽ giữ nguyên cho năm 2027 không?","relevant_sources":["BCA-LAW-99-2025"]}
+{"question":"Bộ Công an có dấu hiệu nào trong năm 2026 cho thấy quy định tuyển sinh có thể thay đổi không?","relevant_sources":["BCA-LAW-99-2025"]}
 {"question":"Văn bản sức khỏe nào sửa đổi Thông tư 62/2023/TT-BCA và còn hiệu lực năm 2026?","relevant_sources":["BCA-LAW-131-2025"]}
-{"question":"Tôi tốt nghiệp CNTT, nam cao 1m62 thì ngưỡng chiều cao công khai của Học viện CSND nói gì?","relevant_sources":["HVCSND-VB2-2026"]}
-{"question":"BMI 31 có nằm trong khoảng sức khỏe được công bố không?","relevant_sources":["BCA-LAW-131-2025","HVCSND-VB2-2026"]}
+{"question":"Quy chế tuyển sinh đại học chung của Bộ GDĐT áp dụng năm 2026 là thông tư nào?","relevant_sources":["BGDDT-LAW-06-2026"]}
 {"question":"Văn bằng 2 tuyển mới cho công dân ngoài ngành có giống văn bằng 2 dành cho cán bộ Công an đang công tác không?","relevant_sources":["HVCSND-VB2-2026"]}
 {"question":"Điểm chuẩn tuyển sinh từ THPT vào Học viện Cảnh sát năm 2026 là bao nhiêu?","relevant_sources":["HVCSND-VB2-2026"]}
 {"question":"Công thức làm bánh tiramisu là gì?","relevant_sources":[],"ood":true}
 {"question":"Ai vô địch World Cup gần nhất?","relevant_sources":[],"ood":true}
 {"question":"Giá Bitcoin hôm nay bao nhiêu?","relevant_sources":[],"ood":true}
 {"question":"Hướng dẫn tôi sửa lỗi JavaScript React useEffect?","relevant_sources":[],"ood":true}
+{"question":"Tôi muốn tư vấn hồ sơ đi du học Mỹ bằng visa F1","relevant_sources":[],"ood":true}
