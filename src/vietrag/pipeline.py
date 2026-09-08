@@ -113,22 +113,30 @@ class VietRAGPipeline:
     def format_sources(answer: Answer) -> str:
         if not answer.sources:
             return ""
-        lines = ["\n\n### Nguồn truy xuất"]
+        lines = ["\n\n### Bằng chứng chính thức đã truy xuất"]
         for i, item in enumerate(answer.sources, start=1):
-            where = item.chunk.source
+            label = item.chunk.title or item.chunk.source
+            meta: list[str] = []
+            if item.chunk.authority:
+                meta.append(item.chunk.authority)
+            if item.chunk.verified_at:
+                meta.append(f"xác minh {item.chunk.verified_at}")
+            if item.chunk.status:
+                meta.append(f"{item.chunk.status}")
             if item.chunk.page is not None:
-                where += f", trang {item.chunk.page}"
-            if item.chunk.url:
-                where += f" — {item.chunk.url}"
-            score_bits = [
-                f"dense={item.dense_score:.3f}"
-                if item.dense_score is not None
-                else None
-            ]
+                meta.append(f"trang {item.chunk.page}")
+            score_bits = []
+            if item.dense_score is not None:
+                score_bits.append(f"dense={item.dense_score:.3f}")
             if item.rerank_score is not None:
                 score_bits.append(f"rerank={item.rerank_score:.3f}")
-            score_text = ", ".join(x for x in score_bits if x)
-            lines.append(
-                f"- [S{i}] {where}" + (f" ({score_text})" if score_text else "")
-            )
+            if score_bits:
+                meta.append(", ".join(score_bits))
+
+            line = f"- [S{i}] **{label}**"
+            if meta:
+                line += f" — {'; '.join(meta)}"
+            if item.chunk.url:
+                line += f"\n  {item.chunk.url}"
+            lines.append(line)
         return "\n".join(lines)
