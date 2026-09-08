@@ -2,66 +2,102 @@
 
 ## Purpose
 
-A small, high-confidence knowledge corpus for a specialized RAG assistant about **VB2CA tuyển mới**: tuyển mới đào tạo trình độ đại học chính quy Công an nhân dân đối với công dân đã có bằng tốt nghiệp trình độ đại học trở lên, with emphasis on candidates whose first degree is Computer Science / Information Technology.
+A compact, high-confidence corpus for a specialized RAG assistant about **VB2CA tuyển mới**: tuyển mới đào tạo trình độ đại học chính quy CAND đối với công dân đã có bằng tốt nghiệp đại học trở lên, with emphasis on applicants whose first degree is Computer Science / Information Technology.
 
 **Verification snapshot:** 2026-09-08 (Vietnam time).
 
 ## Source policy
 
-Only Grade-A primary sources are accepted into the curated corpus:
+Only primary official sources are admissible as answer evidence:
+
+### A0
 
 1. Ministry of Public Security official portal (`bocongan.gov.vn`).
-2. Ministry of Public Security official legal-document database (`vanban.bocongan.gov.vn`).
-3. Official CAND academy/school websites.
+2. Ministry of Public Security legal-document database (`vanban.bocongan.gov.vn`).
+3. Official Government/MOET legal publication (`vanban.chinhphu.vn`, official MOET domains where used).
+4. Central Ministry 2026 admissions/exam/status notices.
 
-The curated truth set does **not** use news aggregators, newspapers, training centers, blogs, forums, Reddit, Facebook groups, TikTok, or SEO pages as authoritative evidence.
+### A1
 
-`data/source_registry.yaml` records every canonical source, authority, URL, evidence grade, status, and verification date.
+Official CAND academy/school websites for institution-specific implementation details.
 
-## Why snapshots are committed instead of scraping on every run
+The truth set does **not** use newspapers, commercial coaching centers, forums, social-media posts, SEO pages or unsourced reposts as authoritative evidence.
 
-Government websites may change layout, rate-limit requests, remove attachments, or be temporarily unavailable. A reproducible RAG experiment should not silently change its corpus every time a notebook is executed.
+## Reproducible snapshots
+
+Government websites can change layout, rate-limit, move attachments or update content. Re-scraping on every notebook run would make evaluation non-reproducible.
 
 Therefore:
 
-- `data/corpus/*.md` contains concise, human-reviewed factual snapshots with YAML provenance frontmatter.
-- `data/official_sources.yaml` contains optional live URLs for re-checking or experimental live ingestion.
-- Google Colab builds the default FAISS/BM25 index from the committed snapshots, so a clone can run immediately.
+- `data/corpus/*.md` contains concise, human-reviewed factual snapshots with YAML provenance;
+- `data/source_registry.yaml` contains canonical source metadata and temporal class;
+- `data/known_source_issues.yaml` records discovered source conflicts/typos;
+- `data/official_sources.yaml` is optional for live-refresh experiments;
+- the default Colab build indexes the committed corpus and persists the index to Google Drive.
 
-The snapshots are paraphrased factual summaries, not mirrors of entire official webpages.
+Snapshots are paraphrased factual summaries, not mirrors of entire official webpages.
 
-## Temporal validity rules
+## Temporal model
 
-- Annual admissions facts must come from 2026 sources for the 2026 intake.
-- Legal documents are accepted as current only when the official legal database marks them in force at the verification date.
-- If an older rule conflicts with a 2026 notice or an amending legal document, the newer/current authority wins.
-- Deadline-sensitive answers must consider the verification date. At 2026-09-08, the ordinary 2026 initial registration window (15/03–15/06) and 20/08 file-submission milestone have already passed, while the 20/09 computer-based VB2CA exam is still upcoming in the verified official plan.
-- The system must not invent a late-registration or supplementary round without a newer official notice.
+The dataset does not treat all “official” facts as equally durable.
 
-## Scope boundary
+- **IN_FORCE** — legal/normative basis verified as effective or explicitly cited as current by authoritative 2026 guidance.
+- **ANNUAL_2026** — quota, deadline, exam configuration and operational facts only for the 2026 cycle.
+- **CURRENT_STATUS** — dated operational snapshot, rapidly stale.
+- **WATCH_ONLY_DRAFT** — official draft/change signal; never indexed as current answer evidence.
+
+### Important August 2026 change signal
+
+On 13/08/2026, Bộ Công an opened consultation on a new draft Circular titled **“Thông tư quy định về tuyển sinh trong Công an nhân dân”**, with consultation ending 23/08/2026.
+
+At 08/09/2026, `99/2025/TT-BCA` is still officially marked **Còn hiệu lực**, so current 2026 answers continue to use the existing legal framework and 2026 guidance. However, the new draft is direct evidence that **future stability is uncertain**. The system must not claim that 2026 admissions rules will remain unchanged for 2027.
+
+By contrast, `131/2025/TT-BCA` is also marked **Còn hiệu lực** and the verification pass did not find a newer health-replacement draft. This lowers the observed change signal but does not guarantee future permanence.
+
+## Deadline-sensitive rule
+
+At 2026-09-08:
+
+- the ordinary 2026 initial registration/screening window described by official school sources has passed;
+- the August file-submission milestone has passed;
+- the computer-based VB2CA assessment is still being prepared for 19–20/09/2026;
+- no supplementary/late round is asserted without a newer official notice.
+
+## Scope
 
 Included:
 
-- eligibility for holders of an existing bachelor degree;
-- IT/Computer Science-specific pathways and exceptions;
-- application/sơ tuyển procedure and documents;
-- 2026 timeline;
-- direct admission versus exam route;
-- computer-based exam structure and CA1–CA4;
-- school/major scope and regional rules;
-- published health criteria and current legal basis;
-- current 2026 status.
+- eligibility for an existing university-degree holder;
+- IT/Computer Science-specific routes/exceptions;
+- direct-admission vs exam method;
+- preliminary screening and public document requirements;
+- 2026 schedules;
+- CA1–CA4 and computer-based exam structure;
+- school/major/region rules;
+- published health thresholds and legal basis;
+- current legal status and future-change warnings;
+- domain disambiguation between VB2CA tuyển mới and similarly named programs.
 
-Excluded from the truth set:
+Excluded from authoritative answer evidence:
 
-- second-degree programs for **existing CAND officers**;
-- ordinary police-university admission directly from high school;
-- unverified rumors, predicted cutoffs, coaching-center advice;
-- individual political-background adjudication or medical diagnosis;
-- future 2027 rules unless the dataset is explicitly re-verified and versioned.
+- second-degree programs for existing CAND officers;
+- ordinary THPT-entry CAND admission facts unless needed only to explain domain confusion;
+- predictions, rumors and coaching-center advice;
+- private/internal political screening details not publicly published;
+- medical diagnosis or definitive health adjudication;
+- draft rules as if they were effective law;
+- future 2027 facts until a new verified dataset version is created.
+
+## Versioning and persistence
+
+`build_index.py` fingerprints corpus content, chunking configuration, embedding model and embedding dimensions. The persisted Google Drive index includes `index_manifest.json`.
+
+If the fingerprint is unchanged, the build is skipped and Gemini embeddings are not called again. Retrieval settings, reranker choice and generation model can change without rebuilding the vector index.
 
 ## Known limitations
 
-This is a high-confidence curated corpus, not a complete copy of every internal Ministry instruction. Political-standard assessment and final health eligibility are performed by competent police authorities and cannot be inferred reliably by an LLM. Some appendices/attachments may contain more detail than public HTML pages.
+A high-confidence curated dataset is still not a substitute for the competent police authority. Final political-standard, health, preliminary-screening and enrollment decisions belong to the official process. Public HTML pages may omit appendices or internal implementation detail.
 
-Before using this system for a later admission cycle, create a new dataset version and re-verify every source rather than assuming 2026 rules remain unchanged.
+For any later intake, re-verify the source registry and legal watchlist rather than assuming the 2026 snapshot remains current.
+
+See [Data Governance](DATA_GOVERNANCE.md) for authority ordering and conflict policy.
