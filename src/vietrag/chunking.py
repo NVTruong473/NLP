@@ -13,6 +13,11 @@ class Segment:
     title: str = ""
     page: int | None = None
     url: str | None = None
+    authority: str | None = None
+    published: str | None = None
+    verified_at: str | None = None
+    status: str | None = None
+    scope: str | None = None
 
 
 @dataclass
@@ -23,6 +28,11 @@ class Chunk:
     title: str = ""
     page: int | None = None
     url: str | None = None
+    authority: str | None = None
+    published: str | None = None
+    verified_at: str | None = None
+    status: str | None = None
+    scope: str | None = None
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -40,6 +50,22 @@ def _id_for(segment: Segment, start_word: int, text: str) -> str:
     return hashlib.sha1(raw).hexdigest()[:16]
 
 
+def _chunk_from_segment(segment: Segment, start_word: int, text: str) -> Chunk:
+    return Chunk(
+        chunk_id=_id_for(segment, start_word, text),
+        text=text,
+        source=segment.source,
+        title=segment.title,
+        page=segment.page,
+        url=segment.url,
+        authority=segment.authority,
+        published=segment.published,
+        verified_at=segment.verified_at,
+        status=segment.status,
+        scope=segment.scope,
+    )
+
+
 def chunk_segment(
     segment: Segment,
     chunk_words: int = 350,
@@ -51,16 +77,7 @@ def chunk_segment(
     if not words:
         return []
     if len(words) <= chunk_words:
-        return [
-            Chunk(
-                chunk_id=_id_for(segment, 0, text),
-                text=text,
-                source=segment.source,
-                title=segment.title,
-                page=segment.page,
-                url=segment.url,
-            )
-        ]
+        return [_chunk_from_segment(segment, 0, text)]
 
     step = max(1, chunk_words - overlap_words)
     chunks: list[Chunk] = []
@@ -70,16 +87,7 @@ def chunk_segment(
             chunks[-1].text = f"{chunks[-1].text} {' '.join(part)}".strip()
             break
         chunk_text = " ".join(part)
-        chunks.append(
-            Chunk(
-                chunk_id=_id_for(segment, start, chunk_text),
-                text=chunk_text,
-                source=segment.source,
-                title=segment.title,
-                page=segment.page,
-                url=segment.url,
-            )
-        )
+        chunks.append(_chunk_from_segment(segment, start, chunk_text))
         if start + chunk_words >= len(words):
             break
     return chunks
