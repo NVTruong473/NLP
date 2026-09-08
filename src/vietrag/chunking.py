@@ -18,6 +18,7 @@ class Segment:
     verified_at: str | None = None
     status: str | None = None
     scope: str | None = None
+    section: str | None = None
 
 
 @dataclass
@@ -33,6 +34,7 @@ class Chunk:
     verified_at: str | None = None
     status: str | None = None
     scope: str | None = None
+    section: str | None = None
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -46,7 +48,9 @@ def normalize_whitespace(text: str) -> str:
 
 
 def _id_for(segment: Segment, start_word: int, text: str) -> str:
-    raw = f"{segment.source}|{segment.page}|{start_word}|{text[:120]}".encode("utf-8")
+    raw = (
+        f"{segment.source}|{segment.page}|{segment.section}|{start_word}|{text[:120]}"
+    ).encode("utf-8")
     return hashlib.sha1(raw).hexdigest()[:16]
 
 
@@ -63,6 +67,7 @@ def _chunk_from_segment(segment: Segment, start_word: int, text: str) -> Chunk:
         verified_at=segment.verified_at,
         status=segment.status,
         scope=segment.scope,
+        section=segment.section,
     )
 
 
@@ -72,6 +77,12 @@ def chunk_segment(
     overlap_words: int = 60,
     min_chunk_words: int = 40,
 ) -> list[Chunk]:
+    """Chunk within one semantic section.
+
+    Markdown heading boundaries are created upstream by ``ingest.load_markdown``.
+    This avoids mixing unrelated legal/admissions sections merely because a
+    fixed token window crossed a heading boundary.
+    """
     text = normalize_whitespace(segment.text)
     words = text.split()
     if not words:
@@ -84,6 +95,7 @@ def chunk_segment(
     for start in range(0, len(words), step):
         part = words[start : start + chunk_words]
         if len(part) < min_chunk_words and chunks:
+            # Keep tail information, but never merge across a heading/segment.
             chunks[-1].text = f"{chunks[-1].text} {' '.join(part)}".strip()
             break
         chunk_text = " ".join(part)
