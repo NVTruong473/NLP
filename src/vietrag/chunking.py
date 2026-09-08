@@ -19,6 +19,9 @@ class Segment:
     status: str | None = None
     scope: str | None = None
     section: str | None = None
+    evidence_grade: str | None = None
+    temporal_class: str | None = None
+    change_risk: str | None = None
 
 
 @dataclass
@@ -35,6 +38,9 @@ class Chunk:
     status: str | None = None
     scope: str | None = None
     section: str | None = None
+    evidence_grade: str | None = None
+    temporal_class: str | None = None
+    change_risk: str | None = None
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -68,6 +74,9 @@ def _chunk_from_segment(segment: Segment, start_word: int, text: str) -> Chunk:
         status=segment.status,
         scope=segment.scope,
         section=segment.section,
+        evidence_grade=segment.evidence_grade,
+        temporal_class=segment.temporal_class,
+        change_risk=segment.change_risk,
     )
 
 
