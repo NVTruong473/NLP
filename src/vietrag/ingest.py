@@ -15,7 +15,7 @@ from .chunking import Segment, normalize_whitespace
 
 
 DEFAULT_HEADERS = {
-    "User-Agent": "VietRAG/1.2 (+https://github.com/NVTruong473/NLP)"
+    "User-Agent": "VietRAG/1.3 (+https://github.com/NVTruong473/NLP)"
 }
 
 
@@ -40,6 +40,9 @@ def _segment_kwargs(metadata: dict, path: Path) -> dict:
         "verified_at": str(metadata.get("verified_at")) if metadata.get("verified_at") is not None else None,
         "status": metadata.get("status"),
         "scope": metadata.get("scope"),
+        "evidence_grade": metadata.get("evidence_grade"),
+        "temporal_class": metadata.get("temporal_class"),
+        "change_risk": metadata.get("change_risk"),
     }
 
 
@@ -74,8 +77,6 @@ def load_markdown(path: str | Path) -> list[Segment]:
             buffer = []
             return
         section = " > ".join(heading_stack) if heading_stack else None
-        # Make section semantics visible to dense/BM25 retrieval while keeping
-        # the same section path as explicit metadata for citations/debugging.
         text = f"Mục: {section}\n{content}" if section else content
         output.append(Segment(text=text, section=section, **kwargs))
         buffer = []
