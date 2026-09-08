@@ -20,9 +20,9 @@
 {"question":"Ngành An toàn thông tin thi CA1 hay được chọn CA1 đến CA4?","relevant_sources":["BCA-EXAM-2026"]}
 {"question":"Công thức tính điểm xét tuyển Phương thức 2 VB2CA là gì?","relevant_sources":["BCA-EXAM-2026"]}
 {"question":"Thông tư 99/2025/TT-BCA còn hiệu lực vào tháng 9/2026 không?","relevant_sources":["BCA-LAW-99-2025"]}
-{"question":"Văn bản sức khỏe nào sửa đổi Thông tư 62/2023/TT-BCA và còn hiệu lực năm 2026?","relevant_sources":["BCA-LAW-99-2025"]}
+{"question":"Văn bản sức khỏe nào sửa đổi Thông tư 62/2023/TT-BCA và còn hiệu lực năm 2026?","relevant_sources":["BCA-LAW-131-2025"]}
 {"question":"Tôi tốt nghiệp CNTT, nam cao 1m62 thì ngưỡng chiều cao công khai của Học viện CSND nói gì?","relevant_sources":["HVCSND-VB2-2026"]}
-{"question":"BMI 31 có nằm trong khoảng sức khỏe được công bố không?","relevant_sources":["HVCSND-VB2-2026"]}
+{"question":"BMI 31 có nằm trong khoảng sức khỏe được công bố không?","relevant_sources":["BCA-LAW-131-2025","HVCSND-VB2-2026"]}
 {"question":"Văn bằng 2 tuyển mới cho công dân ngoài ngành có giống văn bằng 2 dành cho cán bộ Công an đang công tác không?","relevant_sources":["HVCSND-VB2-2026"]}
 {"question":"Điểm chuẩn tuyển sinh từ THPT vào Học viện Cảnh sát năm 2026 là bao nhiêu?","relevant_sources":["HVCSND-VB2-2026"]}
 {"question":"Công thức làm bánh tiramisu là gì?","relevant_sources":[],"ood":true}
