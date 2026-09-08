@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import mimetypes
+import re
 from pathlib import Path
 from urllib.parse import urlparse
 
 import fitz
 import requests
+import yaml
 from bs4 import BeautifulSoup
 from docx import Document as DocxDocument
 
@@ -13,8 +15,37 @@ from .chunking import Segment, normalize_whitespace
 
 
 DEFAULT_HEADERS = {
-    "User-Agent": "VietRAG/1.0 (+https://github.com/NVTruong473/NLP)"
+    "User-Agent": "VietRAG/1.1 (+https://github.com/NVTruong473/NLP)"
 }
+
+
+def _frontmatter(text: str) -> tuple[dict, str]:
+    """Parse optional YAML frontmatter from curated Markdown snapshots."""
+    if not text.startswith("---"):
+        return {}, text
+    match = re.match(r"^---\s*\n(.*?)\n---\s*\n?(.*)$", text, flags=re.S)
+    if not match:
+        return {}, text
+    metadata = yaml.safe_load(match.group(1)) or {}
+    return metadata if isinstance(metadata, dict) else {}, match.group(2)
+
+
+def _segment_from_text(text: str, path: Path) -> Segment | None:
+    metadata, body = _frontmatter(text)
+    body = normalize_whitespace(body)
+    if not body:
+        return None
+    return Segment(
+        text=body,
+        source=str(metadata.get("source_id") or path.stem),
+        title=str(metadata.get("title") or path.stem),
+        url=metadata.get("official_url") or metadata.get("url"),
+        authority=metadata.get("authority"),
+        published=str(metadata.get("published")) if metadata.get("published") is not None else None,
+        verified_at=str(metadata.get("verified_at")) if metadata.get("verified_at") is not None else None,
+        status=metadata.get("status"),
+        scope=metadata.get("scope"),
+    )
 
 
 def load_pdf(path: str | Path) -> list[Segment]:
@@ -25,7 +56,7 @@ def load_pdf(path: str | Path) -> list[Segment]:
     for i, page in enumerate(doc):
         text = normalize_whitespace(page.get_text("text"))
         if text:
-            out.append(Segment(text=text, source=path.name, title=title, page=i + 1))
+            out.append(Segment(text=text, source=path.stem, title=title, page=i + 1))
     return out
 
 
@@ -33,13 +64,14 @@ def load_docx(path: str | Path) -> list[Segment]:
     path = Path(path)
     doc = DocxDocument(path)
     text = "\n\n".join(p.text for p in doc.paragraphs if p.text.strip())
-    return [Segment(text=normalize_whitespace(text), source=path.name, title=path.stem)] if text.strip() else []
+    return [Segment(text=normalize_whitespace(text), source=path.stem, title=path.stem)] if text.strip() else []
 
 
 def load_text(path: str | Path) -> list[Segment]:
     path = Path(path)
-    text = path.read_text(encoding="utf-8", errors="ignore")
-    return [Segment(text=normalize_whitespace(text), source=path.name, title=path.stem)] if text.strip() else []
+    raw = path.read_text(encoding="utf-8", errors="ignore")
+    segment = _segment_from_text(raw, path)
+    return [segment] if segment else []
 
 
 def load_html_text(html: str, source: str, url: str | None = None) -> list[Segment]:
@@ -69,7 +101,7 @@ def load_url(url: str, timeout: int = 30) -> list[Segment]:
         segments = load_pdf(tmp)
         for s in segments:
             s.url = url
-            s.source = name or url
+            s.source = Path(name).stem or url
         return segments
     return load_html_text(r.text, source=name or url, url=url)
 
@@ -84,6 +116,6 @@ def load_path(path: str | Path) -> list[Segment]:
     if suffix in {".txt", ".md", ".csv", ".json"}:
         return load_text(path)
     if suffix in {".html", ".htm"}:
-        return load_html_text(path.read_text(encoding="utf-8", errors="ignore"), source=path.name)
+        return load_html_text(path.read_text(encoding="utf-8", errors="ignore"), source=path.stem)
     mime = mimetypes.guess_type(path.name)[0] or ""
     raise ValueError(f"Unsupported file type: {path} ({mime})")
