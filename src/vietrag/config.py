@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -55,8 +56,12 @@ def load_config(path: str | Path) -> AppConfig:
         generation = dict(generation)
         generation["provider_order"] = tuple(generation["provider_order"])
 
+    # Colab quick-resume can point at a persistent Google Drive cache without
+    # editing the committed YAML file.
+    index_dir = os.getenv("VIETRAG_INDEX_DIR", raw.get("index_dir", "artifacts/index"))
+
     return AppConfig(
-        index_dir=raw.get("index_dir", "artifacts/index"),
+        index_dir=index_dir,
         chunking=_merge_dataclass(ChunkingConfig, raw.get("chunking")),
         retrieval=_merge_dataclass(RetrievalConfig, raw.get("retrieval")),
         generation=_merge_dataclass(GenerationConfig, generation),
