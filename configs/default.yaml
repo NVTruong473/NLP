@@ -1,0 +1,23 @@
+index_dir: artifacts/index
+
+chunking:
+  chunk_words: 350
+  overlap_words: 60
+  min_chunk_words: 40
+
+retrieval:
+  dense_top_k: 20
+  bm25_top_k: 20
+  fusion_top_k: 20
+  rerank_top_k: 5
+  rrf_k: 60
+  dense_weight: 1.0
+  bm25_weight: 0.8
+  # Calibrate this on your own in-domain/OOD evaluation set.
+  ood_dense_threshold: 0.28
+
+generation:
+  provider_order: [gemini, openrouter]
+  max_context_chars: 18000
+  # Keep Gemini 3.x model defaults unless an experiment intentionally changes sampling.
+  temperature: null
