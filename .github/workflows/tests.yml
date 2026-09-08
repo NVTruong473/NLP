@@ -13,4 +13,5 @@ jobs:
         with:
           python-version: "3.11"
       - run: pip install -r requirements.txt
+      - run: python scripts/validate_sources.py
       - run: PYTHONPATH=src pytest -q
