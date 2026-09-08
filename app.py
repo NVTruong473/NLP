@@ -25,18 +25,19 @@ def answer(message: str, history):
 
 demo = gr.ChatInterface(
     fn=answer,
-    title="CAND-VB2 RAG — Trợ lý tuyển sinh Văn bằng 2 Công an 2026",
+    title="CAND-VB2 RAG — Trợ lý VB2 Công an có bằng chứng",
     description=(
-        "Dataset chỉ dùng nguồn chính thức Bộ Công an/trường CAND, xác minh đến 08/09/2026. "
-        "Hỏi về điều kiện bằng CNTT, sơ tuyển, hồ sơ, kỳ thi, trường/ngành, sức khỏe và lịch 2026. "
-        "Mọi câu trả lời phải có bằng chứng [S#]."
+        "Nguồn chính thức A0/A1, snapshot xác minh đến 08/09/2026. "
+        "Hệ thống phân biệt quy định đang có hiệu lực, thông tin riêng kỳ 2026 và tín hiệu dự thảo tương lai. "
+        "Mỗi câu trả lời phải bám bằng chứng [S#]; dự thảo không được dùng như luật hiện hành."
     ),
     examples=[
         "Tôi có bằng đại học CNTT loại Khá thì năm 2026 có thể dự tuyển VB2 Công an theo hướng nào?",
+        "Ngành An toàn thông tin Học viện ANND có bao nhiêu chỉ tiêu VB2 năm 2026 và bằng 1 cần thuộc lĩnh vực nào?",
         "Nếu tôi chưa đăng ký sơ tuyển trước ngày 15/6/2026 thì bây giờ 8/9/2026 còn đăng ký được không?",
-        "Kỳ thi VB2CA 2026 thi ngày nào, trên máy tính ra sao và CA1 gồm những gì?",
-        "Bằng CNTT có thể đăng ký ngành An toàn thông tin của Học viện An ninh nhân dân không?",
-        "Nam học CNTT cao 1m62 có phù hợp ngưỡng sức khỏe được công bố không?",
+        "Kỳ thi VB2CA 2026 tổ chức 19-20/9 hay thi chính ngày 20/9?",
+        "Nam tốt nghiệp CNTT cao 1m62 thì ngưỡng chiều cao công khai ở Học viện CSND nói gì?",
+        "Thông tư 99/2025/TT-BCA đang còn hiệu lực, vậy có chắc năm 2027 giữ nguyên không?",
         "Văn bằng 2 dành cho cán bộ CAND có phải cùng chương trình VB2CA tuyển mới không?",
         "Cho tôi công thức làm bánh tiramisu.",
     ],
