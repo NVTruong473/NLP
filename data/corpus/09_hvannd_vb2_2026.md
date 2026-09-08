@@ -2,7 +2,7 @@
 source_id: HVANND-VB2-2026
 title: Học viện An ninh nhân dân - VB2CA tuyển mới 2026
 authority: Học viện An ninh nhân dân
- official_url: https://hvannd.edu.vn/en/tuyen-sinh-tuyen-moi-dao-tao-trinh-do-dai-hoc-nam-2026-tai-hoc-vien-an-ninh-nhan-dan
+official_url: https://hvannd.edu.vn/en/tuyen-sinh-tuyen-moi-dao-tao-trinh-do-dai-hoc-nam-2026-tai-hoc-vien-an-ninh-nhan-dan
 published: '2026-04-23'
 verified_at: '2026-09-08'
 status: current_for_2026_intake
