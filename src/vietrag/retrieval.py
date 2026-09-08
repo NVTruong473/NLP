@@ -39,6 +39,35 @@ class RetrievedChunk:
     rerank_score: float | None = None
 
 
+def source_diverse(
+    results: Sequence[RetrievedChunk],
+    *,
+    max_per_source: int,
+    limit: int | None = None,
+) -> list[RetrievedChunk]:
+    """Preserve ranking order while limiting repeated chunks from one source.
+
+    This borrows the *multi-view retrieval* motivation from LightRAG without
+    introducing an LLM-generated knowledge graph. It is especially useful for
+    VB2CA questions that require evidence from both central regulations and a
+    specific academy/school.
+    """
+    if max_per_source <= 0:
+        return list(results[:limit] if limit is not None else results)
+
+    counts: dict[str, int] = {}
+    output: list[RetrievedChunk] = []
+    for item in results:
+        source = item.chunk.source or "__unknown__"
+        if counts.get(source, 0) >= max_per_source:
+            continue
+        counts[source] = counts.get(source, 0) + 1
+        output.append(item)
+        if limit is not None and len(output) >= limit:
+            break
+    return output
+
+
 class HybridIndex:
     def __init__(self, chunks: list[Chunk], index: faiss.Index, embedder: GeminiProvider):
         if not chunks:
@@ -99,6 +128,7 @@ class HybridIndex:
         rrf_k: int = 60,
         dense_weight: float = 1.0,
         bm25_weight: float = 0.8,
+        max_chunks_per_source: int = 3,
         reranker: OpenRouterProvider | None = None,
         rerank_top_k: int = 5,
     ) -> tuple[list[RetrievedChunk], float]:
@@ -125,7 +155,7 @@ class HybridIndex:
             weights=[dense_weight, bm25_weight],
             rrf_k=rrf_k,
         )
-        fused_ids = sorted(fused, key=fused.get, reverse=True)[:fusion_top_k]
+        fused_ids = sorted(fused, key=fused.get, reverse=True)
         results = [
             RetrievedChunk(
                 chunk=self.chunks[idx],
@@ -134,6 +164,14 @@ class HybridIndex:
             )
             for idx in fused_ids
         ]
+
+        # Keep broad evidence coverage before the second-stage reranker. This
+        # prevents one very long source from occupying the entire candidate set.
+        results = source_diverse(
+            results,
+            max_per_source=max_chunks_per_source,
+            limit=fusion_top_k,
+        )
 
         if reranker and results:
             try:
