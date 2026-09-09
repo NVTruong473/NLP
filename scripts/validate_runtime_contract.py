@@ -110,7 +110,11 @@ def main() -> int:
             "chunks.jsonl",
             "index_manifest.json",
             "VIETRAG_INDEX_DIR",
-            "app.py",
+            "SRC_DIR = REPO_DIR / 'src'",
+            "sys.path.insert(0, src_path)",
+            "find_spec('vietrag')",
+            "import app",
+            "demo.launch",
         )
         for fragment in required_quick_fragments:
             if fragment not in quick:
@@ -119,6 +123,8 @@ def main() -> int:
             fail(errors, "final quick-resume cell must never rebuild/re-embed the corpus")
         if "GITHUB_TOKEN" in quick or "GITHUB_API_KEY" in quick:
             fail(errors, "final quick-resume cell must not require GitHub credentials")
+        if "subprocess.run([sys.executable, 'app.py']" in quick:
+            fail(errors, "final quick-resume cell must launch Gradio in-kernel, not through a blocking subprocess")
 
     # 5) Runtime code must honor the persistent Drive index and private env overrides.
     config_text = (ROOT / "src" / "vietrag" / "config.py").read_text(encoding="utf-8")
@@ -127,6 +133,26 @@ def main() -> int:
         fail(errors, "config.py does not honor VIETRAG_INDEX_DIR")
     if "VIETRAG_ENV" not in app_text:
         fail(errors, "app.py does not honor VIETRAG_ENV")
+
+    # 6) CI smoke-test the src-layout exactly the way Colab quick-resume imports it.
+    smoke = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            (
+                "import sys; "
+                "sys.path.insert(0, 'src'); "
+                "import vietrag; "
+                "from vietrag.config import load_config; "
+                "print(vietrag.__file__)"
+            ),
+        ],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    if smoke.returncode != 0:
+        fail(errors, "src-layout import smoke test failed: " + (smoke.stderr.strip() or smoke.stdout.strip()))
 
     for error in errors:
         print("ERROR:", error)
@@ -138,6 +164,7 @@ def main() -> int:
     print("- secrets are not tracked")
     print("- Gemini + OpenRouter only")
     print("- quick resume loads the persistent Drive index without rebuilding")
+    print("- quick resume injects repo/src into the running Colab kernel before import")
     print("- no GitHub API key/token is required for normal Colab use")
     return 0
 
